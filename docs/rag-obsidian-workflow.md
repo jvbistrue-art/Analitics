@@ -31,6 +31,15 @@ project vector namespace / collection
 agent retrieval policy
 ```
 
+## Информационная архитектура vault
+
+Vault должен помогать двум сценариям одновременно:
+
+1. Человек быстро находит нужный материал без знания внутренних названий файлов.
+2. Агент получает стабильные metadata и понимает, какие источники использовать для конкретного типа задачи.
+
+Главный принцип: папка отвечает за тип знания, а frontmatter отвечает за состояние, проект, владельца, связи и правила retrieval.
+
 ## Структура vault
 
 Рекомендуемая структура для каждого проекта:
@@ -38,22 +47,251 @@ agent retrieval policy
 ```text
 vaults/
   project-slug/
-    00-index.md
-    01-domain/
-    02-decisions/
-    03-research/
-    04-requirements/
-    05-operations/
+    00-home/
+      index.md
+      glossary.md
+      navigation.md
+      project-map.md
+    01-sessions/
+      human/
+      agents/
+      meetings/
+      extracted-decisions/
+    02-tasks/
+      board.md
+      backlog/
+      active/
+      blocked/
+      done/
+      canceled/
+    03-product/
+      domain/
+      requirements/
+      user-stories/
+      constraints/
+    04-architecture/
+      adr/
+      rfc/
+      diagrams/
+      integrations/
+    05-code/
+      code-map.md
+      modules/
+      api/
+      schemas/
+      repositories/
+      snippets/
+    06-data/
+      datasets/
+      metrics/
+      lineage/
+      experiments/
+    07-errors/
+      error-catalog.md
+      incidents/
+      bugs/
+      postmortems/
+      fixes/
+    08-operations/
+      runbooks/
+      deployments/
+      environments/
+      access/
+    09-research/
+      market/
+      technical/
+      alternatives/
     90-archive/
+    99-inbox/
+    _system/
+      templates/
+      schemas/
+      scripts/
 ```
 
-- `00-index.md` - карта проекта: цели, важные ссылки, список ключевых документов.
-- `01-domain/` - предметная область, термины, сущности, бизнес-правила.
-- `02-decisions/` - архитектурные и продуктовые решения.
-- `03-research/` - исследования, заметки по рынку, ссылки на внешние источники.
-- `04-requirements/` - требования, user stories, ограничения.
-- `05-operations/` - инструкции, runbooks, процессы эксплуатации.
-- `90-archive/` - устаревшие материалы, которые не должны попадать в основной retrieval без явного запроса.
+### Назначение папок
+
+| Папка | Что хранить | Что не хранить |
+| --- | --- | --- |
+| `00-home/` | Главные карты, глоссарий, навигация, обзор проекта | Детальные обсуждения, сырые логи |
+| `01-sessions/` | Сессии общения с человеком, агентные сессии, встречи, извлеченные выводы | Финальные решения без переноса в ADR/task |
+| `02-tasks/` | Небольшая Jira: задачи, статусы, блокеры, acceptance criteria | Общие заметки без action item |
+| `03-product/` | Домен, требования, user stories, ограничения | Архитектурные решения и кодовые детали |
+| `04-architecture/` | ADR, RFC, диаграммы, интеграции | Временные обсуждения без решения |
+| `05-code/` | Карта кода, описание модулей, API, схем, ссылки на repo/commit | Полные копии исходного кода без необходимости |
+| `06-data/` | Датасеты, метрики, lineage, эксперименты | Секреты, персональные данные, сырые дампы без политики доступа |
+| `07-errors/` | Ошибки, баги, инциденты, postmortem, исправления | Непроверенные сведения без источника |
+| `08-operations/` | Runbooks, деплой, окружения, доступы без секретов | Пароли, токены, приватные ключи |
+| `09-research/` | Исследования, альтернативы, внешние ссылки | Принятые решения без переноса в ADR |
+| `90-archive/` | Устаревшие материалы | Активные требования и решения |
+| `99-inbox/` | Временный входящий буфер | Постоянные документы |
+| `_system/` | Шаблоны, схемы, служебные скрипты | Проектные знания для retrieval |
+
+### Правила размещения файлов
+
+Чтобы файлы не расползались по vault:
+
+1. Любой новый файл сначала попадает в правильную доменную папку или в `99-inbox/`, если тип пока неясен.
+2. В `99-inbox/` файл живет только до ближайшей разборки базы знаний. После этого его нужно переместить, удалить или заархивировать.
+3. Сессия общения не считается финальным знанием. Из нее нужно извлекать задачи, решения, требования, ошибки и переносить их в соответствующие папки.
+4. Решение не остается только в сессии или задаче. Если оно влияет на архитектуру или продукт, создается ADR или requirement.
+5. Ошибка не остается только в задаче. Для повторяемых или важных ошибок создается запись в `07-errors/`.
+6. Код не дублируется целиком в vault. В `05-code/` хранится карта кода, контракты, важные snippets, ссылки на файлы, commits и PR.
+7. Архивные документы переносятся в `90-archive/` и получают `status: archived`.
+
+### Навигация для человека
+
+В каждом крупном разделе должен быть индекс:
+
+```text
+00-home/project-map.md
+02-tasks/board.md
+04-architecture/adr/index.md
+05-code/code-map.md
+07-errors/error-catalog.md
+```
+
+Индекс отвечает на вопросы:
+
+- что здесь лежит;
+- какие документы читать первыми;
+- какие документы активны;
+- какие документы устарели;
+- с чем связан раздел.
+
+## Рабочие области проекта
+
+### Сессии общения
+
+Сессия - это журнал взаимодействия с человеком, агентом или командой. Она нужна для трассировки контекста, но не должна становиться единственным источником истины.
+
+Рекомендуемый путь:
+
+```text
+01-sessions/human/2026-05-19-rag-process.md
+01-sessions/agents/2026-05-19-indexing-design.md
+01-sessions/meetings/2026-05-19-sync.md
+```
+
+После сессии агент или человек должен извлечь:
+
+- новые задачи -> `02-tasks/`;
+- принятые решения -> `04-architecture/adr/` или `03-product/requirements/`;
+- обнаруженные ошибки -> `07-errors/`;
+- изменения в карте кода -> `05-code/code-map.md`;
+- новые термины -> `00-home/glossary.md`.
+
+### Задачи как небольшая Jira
+
+`02-tasks/` хранит легковесный task tracker для синхронизации и контроля.
+
+```text
+02-tasks/
+  board.md
+  backlog/TASK-0001-add-rag-indexer.md
+  active/TASK-0002-design-agent-policy.md
+  blocked/TASK-0003-select-vector-db.md
+  done/TASK-0004-create-vault-structure.md
+```
+
+Минимальный lifecycle:
+
+```text
+backlog -> active -> blocked -> done
+                 \-> canceled
+```
+
+`board.md` содержит ссылки на задачи по статусам. Каждый task-файл содержит:
+
+- problem statement;
+- expected outcome;
+- acceptance criteria;
+- links to sessions, ADR, code, data, errors;
+- owner;
+- status;
+- next action.
+
+### ADR
+
+ADR фиксирует решение, которое должно пережить сессию и задачу.
+
+Рекомендуемый путь:
+
+```text
+04-architecture/adr/ADR-0001-use-obsidian-as-source-of-truth.md
+```
+
+ADR должен содержать:
+
+- context;
+- decision;
+- alternatives;
+- consequences;
+- related tasks;
+- related sessions;
+- supersedes / superseded_by.
+
+### Код
+
+`05-code/` не заменяет репозиторий. Он описывает, как человеку и агенту ориентироваться в коде.
+
+Хранить:
+
+- карту репозиториев и модулей;
+- владельцев модулей;
+- публичные API и контракты;
+- схемы данных;
+- важные snippets с объяснением;
+- ссылки на файлы, commits, PR и ADR.
+
+Не хранить:
+
+- полные копии репозитория;
+- сгенерированные файлы;
+- секреты;
+- большие vendor-зависимости.
+
+### Данные
+
+`06-data/` описывает данные, на которые опирается проект:
+
+- датасеты;
+- источники данных;
+- владельцев;
+- freshness/SLA;
+- lineage;
+- метрики;
+- эксперименты;
+- ограничения доступа.
+
+Если данные чувствительные, в vault хранится описание и ссылка на защищенное хранилище, а не сами данные.
+
+### Ошибки и инциденты
+
+`07-errors/` нужен, чтобы агент не решал одну и ту же проблему заново.
+
+Рекомендуемая структура:
+
+```text
+07-errors/
+  error-catalog.md
+  bugs/BUG-0001-rag-index-duplicates.md
+  incidents/INC-0001-vector-db-outage.md
+  postmortems/PM-0001-indexing-regression.md
+  fixes/FIX-0001-stable-content-hash.md
+```
+
+Запись об ошибке должна содержать:
+
+- симптомы;
+- affected area;
+- root cause, если известен;
+- workaround;
+- permanent fix;
+- related task;
+- related ADR;
+- verification;
+- статус.
 
 ## Формат заметок
 
@@ -97,7 +335,7 @@ retrieval:
 Минимальные обязательные поля:
 
 - `project` - стабильный идентификатор проекта.
-- `type` - тип знания: `index`, `domain`, `decision`, `research`, `requirement`, `operation`, `archive`.
+- `type` - тип знания: `index`, `session`, `task`, `domain`, `requirement`, `adr`, `decision`, `code`, `data`, `error`, `research`, `operation`, `archive`.
 - `status` - `draft`, `active`, `deprecated`, `archived`.
 - `updated` - дата последнего осмысленного обновления.
 - `retrieval.index` - можно ли индексировать заметку.
@@ -106,13 +344,176 @@ retrieval:
 
 | Type | Назначение | Когда использовать |
 | --- | --- | --- |
-| `index` | Карта проекта | В начале новой задачи, при выборе области поиска |
-| `domain` | Термины и правила | При обсуждении предметной области и требований |
-| `decision` | Принятые решения | При архитектурных вопросах и изменении поведения |
-| `research` | Исследования | При анализе альтернатив и внешнего контекста |
-| `requirement` | Требования | При реализации функциональности и проверке acceptance criteria |
-| `operation` | Инструкции | При деплое, отладке, поддержке |
+| `index` | Карта проекта и навигация | В начале новой задачи, при выборе области поиска |
+| `session` | Сессия общения, встречи, агентные логи | Для восстановления контекста и поиска исходного обсуждения |
+| `task` | Легковесная Jira-задача | При планировании, синхронизации статуса, проверке acceptance criteria |
+| `domain` | Термины и бизнес-правила | При обсуждении предметной области и требований |
+| `requirement` | Требования и ограничения | При реализации функциональности и проверке поведения |
+| `adr` | Архитектурное решение | При выборе технического подхода и проверке уже принятых решений |
+| `decision` | Продуктовое или процессное решение | Когда решение не является архитектурным ADR |
+| `code` | Карта кода, API, схемы, snippets | При реализации, ревью, поиске владельцев и контрактов |
+| `data` | Датасеты, метрики, lineage, эксперименты | При аналитике, ML/RAG, проверке источников данных |
+| `error` | Ошибки, баги, инциденты, fixes | При отладке и поиске известных проблем |
+| `research` | Исследования и альтернативы | При анализе вариантов и внешнего контекста |
+| `operation` | Инструкции и runbooks | При деплое, поддержке, доступах и эксплуатации |
 | `archive` | Устаревшие материалы | Только если агент явно ищет исторический контекст |
+
+## Шаблоны ключевых документов
+
+Шаблоны лучше хранить в `_system/templates/` и копировать при создании новых файлов. Это делает документы однотипными и облегчает поиск.
+
+### Session
+
+```markdown
+---
+project: analytics-platform
+type: session
+status: active
+created: 2026-05-19
+updated: 2026-05-19
+participants:
+  - human
+  - agent
+related_tasks: []
+related_adr: []
+retrieval:
+  index: true
+  priority: normal
+---
+
+# Сессия: тема
+
+## Цель
+
+## Обсуждение
+
+## Решения для извлечения
+
+## Задачи для создания
+
+## Ошибки / риски
+
+## Ссылки
+```
+
+### Task
+
+```markdown
+---
+project: analytics-platform
+type: task
+status: active
+owner: product
+created: 2026-05-19
+updated: 2026-05-19
+task_id: TASK-0001
+priority: medium
+related_sessions: []
+related_adr: []
+related_code: []
+related_errors: []
+retrieval:
+  index: true
+  priority: high
+---
+
+# TASK-0001: краткое название
+
+## Problem
+
+## Expected outcome
+
+## Acceptance criteria
+
+- [ ] ...
+
+## Current status
+
+## Next action
+
+## Links
+```
+
+### ADR
+
+```markdown
+---
+project: analytics-platform
+type: adr
+status: active
+created: 2026-05-19
+updated: 2026-05-19
+adr_id: ADR-0001
+supersedes: []
+superseded_by: []
+related_tasks: []
+retrieval:
+  index: true
+  priority: high
+---
+
+# ADR-0001: решение
+
+## Context
+
+## Decision
+
+## Alternatives
+
+## Consequences
+
+## Links
+```
+
+### Error / Incident
+
+```markdown
+---
+project: analytics-platform
+type: error
+status: active
+created: 2026-05-19
+updated: 2026-05-19
+error_id: BUG-0001
+severity: medium
+affected_area: rag-indexing
+related_tasks: []
+related_code: []
+related_adr: []
+retrieval:
+  index: true
+  priority: high
+---
+
+# BUG-0001: краткое название
+
+## Symptoms
+
+## Root cause
+
+## Workaround
+
+## Permanent fix
+
+## Verification
+
+## Links
+```
+
+## Связи между документами
+
+Для человека и агента важны не только папки, но и граф связей. В каждом документе рекомендуется использовать два слоя связей:
+
+1. Obsidian wikilinks в тексте: `[[ADR-0001-use-obsidian-as-source-of-truth]]`.
+2. Структурные поля во frontmatter: `related_tasks`, `related_adr`, `related_code`, `related_errors`, `related_sessions`.
+
+Минимальный граф проекта:
+
+```text
+session -> task -> ADR / requirement -> code / data -> error / operation
+```
+
+Если агент работает с задачей, он должен подтянуть связанные ADR, code notes, data notes и известные ошибки перед тем, как предлагать реализацию.
 
 ## Индексация
 
@@ -128,7 +529,9 @@ vaults/{project-slug}/**/*.md
 
 - `retrieval.index: false`;
 - `status: archived` и запрос не требует архивных данных;
-- файл лежит в `90-archive/` и нет отдельного archive-index режима.
+- файл лежит в `90-archive/` и нет отдельного archive-index режима;
+- файл лежит в `_system/`, потому что шаблоны и схемы не являются проектным знанием;
+- файл лежит в `99-inbox/` и не прошел разборку, если для проекта включена строгая индексация только curated notes.
 
 ### 2. Parsing
 
@@ -205,8 +608,13 @@ shared:engineering
 - нужно проверить термин, бизнес-правило, ограничение, принятое решение;
 - пользователь просит опираться на проектную документацию;
 - задача затрагивает требования, архитектуру, интеграции, эксплуатацию;
+- нужно понять статус задачи или синхронизироваться с легковесной Jira в `02-tasks/`;
+- нужно восстановить контекст прошлой сессии общения;
+- нужно понять структуру кода, владельцев модулей, API или схемы;
+- нужно проверить данные, метрики, lineage или эксперименты;
+- нужно найти известную ошибку, incident, workaround или permanent fix;
 - есть риск принять решение по памяти без актуального источника;
-- агент видит ссылку на Obsidian note, decision id, requirement id или project slug.
+- агент видит ссылку на Obsidian note, task id, ADR id, error id, requirement id или project slug.
 
 Агент может не использовать RAG, если:
 
