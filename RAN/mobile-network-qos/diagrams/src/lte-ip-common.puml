@@ -1,0 +1,37 @@
+@startuml lte-ip-common
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title LTE IP после P-GW: общая схема выхода в сети данных
+
+rectangle "P-GW\nIP anchor / PCEF" as PGW
+rectangle "CGNAT\naddress sharing" as CGNAT
+rectangle "Firewall\nsecurity policy" as FW
+rectangle "DPI / Traffic optimizer\napplication policy" as DPI
+rectangle "IP/MPLS backbone\nDiffServ/MPLS QoS queues" as MPLS
+cloud "Peering / Transit" as PEER
+cloud "CDN caches" as CDN
+cloud "Enterprise VPN/MPLS" as ENT
+cloud "Public Internet" as NET
+database "NMS/OSS\nQoS templates, ACL,\nrouting, peering policy" as OSS
+
+PGW --> CGNAT : SGi user plane
+CGNAT --> FW
+FW --> DPI
+DPI --> MPLS
+MPLS --> PEER
+MPLS --> CDN
+MPLS --> ENT
+PEER --> NET
+OSS --> PGW : APN routing,\nDSCP marking
+OSS --> FW : ACL/security
+OSS --> DPI : app rules,\nshaping classes
+OSS --> MPLS : queue policy,\nDSCP/MPLS TC
+
+note right of MPLS
+QoS переносится в IP сеть через
+DSCP, MPLS TC/EXP, priority queues,
+policing, shaping, WRED.
+end note
+@enduml

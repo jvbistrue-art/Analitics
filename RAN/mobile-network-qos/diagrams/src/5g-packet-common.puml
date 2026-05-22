@@ -1,0 +1,38 @@
+@startuml 5g-packet-common
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title 5G Core: общая схема PDU Session, QoS Flow и policy
+
+actor "UE" as UE
+rectangle "gNB" as GNB
+node "5G Core SBA" as CORE {
+  rectangle "AMF\nregistration, access,\nN2 anchor" as AMF
+  rectangle "SMF\nPDU Session,\nQoS control" as SMF
+  rectangle "UPF\nN3/N6 user plane,\nQoS enforcement" as UPF
+  database "UDM\nsubscription" as UDM
+  database "PCF\npolicy control" as PCF
+  database "CHF\ncharging" as CHF
+  rectangle "AF / NEF\napplication policy exposure" as AF
+}
+cloud "Data Network\nDNN: internet/ims/enterprise/mec" as DN
+
+UE --> GNB : QoS Flows / DRB
+GNB --> AMF : N2
+GNB --> UPF : N3 GTP-U
+AMF --> SMF : N11
+SMF --> UPF : N4\nPDR/FAR/QER/URR
+SMF <--> PCF : N7\nsession policy
+PCF <--> AF : N5/N33\napp requests
+SMF --> UDM : N10\nsubscription
+SMF --> CHF : N40\ncharging
+UPF --> DN : N6
+SMF --> GNB : QoS profile\n5QI, ARP, GFBR, MFBR
+
+note right of SMF
+SMF связывает policy и forwarding:
+создает PDU Session, QoS rules for UE,
+N2 QoS to gNB, N4 rules to UPF.
+end note
+@enduml

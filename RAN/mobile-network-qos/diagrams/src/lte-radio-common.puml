@@ -1,0 +1,43 @@
+@startuml lte-radio-common
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title LTE Radio/RAN: общая схема применения QoS
+
+actor "UE\nUser Equipment\nсмартфон/модем" as UE
+node "eNodeB\nLTE base station" as ENB {
+  rectangle "RRC Admission Control\nдопуск UE/bearer" as RRC
+  rectangle "PDCP/RLC queues\nочереди DRB" as RLC
+  rectangle "MAC Scheduler\nвыдача PRB и UL grants" as MAC
+  rectangle "PHY/RF\nMCS, HARQ, MIMO" as PHY
+}
+node "EPC" as EPC {
+  rectangle "MME\ncontrol plane" as MME
+  rectangle "S-GW\nuser plane anchor" as SGW
+  rectangle "P-GW/PCEF\nbearer QoS rules" as PGW
+  database "HSS\nsubscriber profile" as HSS
+  database "PCRF\nPCC policy" as PCRF
+}
+cloud "Internet / IMS / Enterprise APN" as DN
+
+UE <--> PHY : LTE-Uu radio
+PHY --> MAC
+MAC --> RLC
+RLC --> RRC
+ENB --> MME : S1-MME\nNAS/RRC context
+ENB --> SGW : S1-U\nGTP-U bearers
+SGW --> PGW : S5/S8\nGTP-U
+PGW --> DN : SGi
+MME --> HSS : S6a
+PGW <--> PCRF : Gx\nQCI/ARP/GBR/AMBR
+PCRF --> ENB : policy reaches RAN\nvia bearer setup
+
+note right of MAC
+Здесь политика становится радио-действием:
+QCI priority, GBR debt, delay budget,
+scheduler weight and CQI/fairness.
+ARP/pre-emption применяется на admission/retention,
+а не как per-packet scheduler priority.
+end note
+@enduml

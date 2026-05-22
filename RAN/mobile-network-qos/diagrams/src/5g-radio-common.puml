@@ -1,0 +1,43 @@
+@startuml 5g-radio-common
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title 5G NR Radio/RAN: общая схема QoS Flow в gNB
+
+actor "UE\n5G device" as UE
+node "gNB" as GNB {
+  rectangle "gNB-CU-CP\nRRC, mobility,\nadmission control" as CUCP
+  rectangle "gNB-CU-UP\nSDAP/PDCP,\nuser plane" as CUUP
+  rectangle "gNB-DU\nRLC/MAC scheduler" as DU
+  rectangle "Radio Unit\nPHY/RF, beamforming" as RU
+}
+node "5G Core" as CORE {
+  rectangle "AMF\naccess control" as AMF
+  rectangle "SMF\nPDU Session control" as SMF
+  rectangle "UPF\nuser plane" as UPF
+  database "PCF\npolicy control" as PCF
+  database "UDM\nsubscription" as UDM
+}
+cloud "Data Network\nInternet / IMS / MEC / enterprise" as DN
+
+UE <--> RU : NR-Uu\nbeams, slots, PRB
+RU --> DU
+DU --> CUUP : F1-U\nDRB transport
+CUCP --> AMF : N2 control
+CUUP --> UPF : N3 GTP-U
+SMF --> UPF : N4 rules
+SMF --> AMF : N11
+SMF <--> PCF : N7\n5QI/ARP/GFBR/MFBR
+SMF --> GNB : N2 QoS profile\nvia AMF
+UPF --> DN : N6
+UDM --> SMF : subscription/DNN/slice
+
+note right of DU
+RAN применяет:
+5QI priority, GFBR debt,
+packet delay budget,
+slice quota and scheduler weight.
+ARP применяется на admission/retention.
+end note
+@enduml

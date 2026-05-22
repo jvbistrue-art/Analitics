@@ -1,0 +1,37 @@
+@startuml 5g-packet-private
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title 5G Core: детальная схема управления конфигурацией и QoS
+
+actor "OSS/BSS\ncatalog, tariffs,\nenterprise SLA" as OSS
+actor "Application Function\nIMS, gaming, enterprise app" as APP
+database "UDR/UDM\nsubscriber data,\nDNN, S-NSSAI,\nAMBR, URSP" as UDM
+database "PCF policy store\nrules, groups,\nQoS templates" as PSTORE
+rectangle "PCF\nPolicy Control Function" as PCF
+rectangle "SMF\nSession Management" as SMF
+rectangle "AMF\nauth/access context" as AMF
+rectangle "gNB\nRAN QoS enforcement" as GNB
+rectangle "UPF\nUser Plane Function" as UPF
+cloud "Data Network" as DN
+
+OSS --> UDM : provision subscriber/slice/DNN
+OSS --> PSTORE : create policy groups\npremium, enterprise, voice
+APP --> PCF : N5/N33 request\napp-specific QoS
+UDM --> SMF : subscription data
+PSTORE --> PCF
+PCF --> SMF : N7 PCC policy\n5QI, ARP, GFBR/MFBR,\nSession-AMBR, gating
+SMF --> AMF : N11 context
+AMF --> GNB : N2 QoS profile
+SMF --> UPF : N4 rules:\nPDR, FAR, QER, URR
+GNB --> UPF : N3 user plane
+UPF --> DN : N6 routing,\nDSCP, QoS enforcement
+
+note bottom
+В 5G конфигурация распределена:
+UDM/UDR хранит подписку, PCF хранит policy,
+SMF строит сессию, UPF применяет QoS на N6/N3,
+gNB применяет приоритет в радио.
+end note
+@enduml

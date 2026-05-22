@@ -1,0 +1,47 @@
+@startuml 5g-ip-private
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title 5G IP после UPF: детальная схема сервисных классов
+
+rectangle "UPF QoS enforcement" as UPF {
+  queue "VoNR / IMS\n5QI 1/5 -> EF/CS" as IMSQ
+  queue "Enterprise slice\nS-NSSAI + DNN\nGFBR / SLA" as ENTQ
+  queue "eMBB internet\n5QI 9 best effort" as EMBQ
+  queue "Low-latency MEC\ncustom 5QI" as MECQ
+}
+rectangle "N6 service chain" as CHAIN {
+  rectangle "QER policer/shaper\nper QoS Flow" as QER
+  rectangle "DSCP marking\nQoS trust boundary" as DSCP
+  rectangle "Firewall/DPI\napplication policy" as DPI
+}
+rectangle "Transport/IP QoS" as IPQ {
+  queue "LLQ\nvoice/low latency" as LLQ
+  queue "AF queue\nenterprise/premium" as AF
+  queue "BE queue\nmass internet" as BE
+}
+cloud "IMS core" as IMS
+cloud "Enterprise DC" as DC
+cloud "MEC app" as MEC
+cloud "Internet/CDN" as NET
+
+IMSQ --> QER
+ENTQ --> QER
+MECQ --> QER
+QER --> DSCP
+DSCP --> LLQ
+DSCP --> AF
+LLQ --> IMS
+LLQ --> MEC
+AF --> DC
+EMBQ --> DPI
+DPI --> BE
+BE --> NET
+
+note bottom
+Для качества группы пользователей в 5G обычно совмещают:
+S-NSSAI, DNN, PCF policy, SMF UPF selection,
+QER shaping, DSCP/IP QoS и MEC/local breakout.
+end note
+@enduml

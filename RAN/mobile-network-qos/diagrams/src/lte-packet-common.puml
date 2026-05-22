@@ -1,0 +1,39 @@
+@startuml lte-packet-common
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title LTE Packet Core/EPC: общая схема bearers и политик
+
+actor "UE" as UE
+node "RAN" as RAN {
+  rectangle "eNodeB" as ENB
+}
+node "EPC packet core" as EPC {
+  rectangle "MME\nmobility/session control" as MME
+  rectangle "S-GW\nuser-plane tunnel anchor" as SGW
+  rectangle "P-GW + PCEF\nIP anchor, charging,\nQoS enforcement" as PGW
+  database "HSS\nsubscription/APN profile" as HSS
+  database "PCRF\nPCC rules" as PCRF
+  database "OCS/OFCS\nonline/offline charging" as OCS
+}
+cloud "Data Networks\nInternet, IMS, enterprise APN" as DN
+
+UE --> ENB : default/dedicated EPS bearers
+ENB --> MME : S1-MME
+ENB --> SGW : S1-U GTP-U
+SGW --> PGW : S5/S8 GTP-U
+PGW --> DN : SGi
+MME --> HSS : S6a\nsubscriber data
+PGW <--> PCRF : Gx\nPCC decisions
+PGW <--> OCS : Gy/Gz\nquota and CDR
+PCRF --> PGW : QCI, ARP, GBR,\nMBR, AMBR, TFT/SDF
+PGW --> ENB : QoS delivered\nthrough bearer setup
+
+note right of PGW
+PCEF применяет policy:
+service data flow filters,
+rate limits, bearer binding,
+charging, gate open/close.
+end note
+@enduml

@@ -1,0 +1,49 @@
+@startuml lte-radio-private
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title LTE Radio/RAN: детальная QoS-механика в eNodeB
+
+actor "UE" as UE
+rectangle "LTE radio bearers" as RB {
+  queue "DRB: QCI 1\nVoLTE RTP\nGBR, low delay" as QCI1
+  queue "DRB: QCI 5\nIMS signaling\nnon-GBR, high priority" as QCI5
+  queue "DRB: QCI 9\nInternet data\nbest effort" as QCI9
+}
+node "eNodeB RAN functions" as ENB {
+  rectangle "RRC/RRM Admission\nпроверка PRB load,\nGBR budget, ARP" as ADM
+  rectangle "RLC buffers\nsegmentation,\nreordering,\ndiscard timer" as RLC
+  rectangle "QoS-aware MAC Scheduler\npriority + fairness + CQI" as SCH
+  rectangle "HARQ manager\nACK/NACK repeats" as HARQ
+  rectangle "Link Adaptation\nCQI -> MCS, rank, PRB cost" as LA
+  rectangle "Interference / Mobility\nICIC, eICIC, MLB, HO" as RRM
+}
+database "Policy inputs\nfrom EPC bearer context:\nQCI, ARP, GBR, MBR,\nAPN-AMBR, TFT" as POL
+cloud "Radio resources\nPRB, PDCCH, PUSCH/PDSCH" as AIR
+
+UE --> QCI1
+UE --> QCI5
+UE --> QCI9
+POL --> ADM
+ADM --> QCI1 : accept / reject / pre-empt
+ADM --> QCI5
+ADM --> QCI9
+QCI1 --> RLC
+QCI5 --> RLC
+QCI9 --> RLC
+RLC --> SCH
+LA --> SCH : channel quality
+HARQ --> SCH : retransmission priority
+SCH --> AIR : PRB allocation
+AIR --> UE : scheduled DL/UL
+RRM --> SCH : load and interference state
+
+note bottom of SCH
+При перегрузке:
+1) GBR bearers удерживают minimum bitrate после admission,
+   если radio capacity достаточна.
+2) Пакеты с риском нарушения delay budget идут раньше.
+3) Best effort снижает throughput первым.
+end note
+@enduml

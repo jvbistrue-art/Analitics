@@ -1,0 +1,45 @@
+@startuml lte-ip-private
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title LTE IP после P-GW: детальная схема классов трафика
+
+rectangle "P-GW/PCEF" as PGW {
+  queue "IMS / VoLTE\nQCI 1/5 mapped to EF/CS" as IMS
+  queue "Premium data\nQCI 8/vendor, higher weight" as PREM
+  queue "Default internet\nQCI 9, best effort" as BE
+  queue "Enterprise APN\nprivate route + SLA" as CORP
+}
+rectangle "QoS edge" as EDGE {
+  rectangle "DSCP rewrite / trust boundary" as DSCP
+  rectangle "Policer / shaper\nper APN, per group" as SHP
+  rectangle "DPI classifier\nvideo, P2P, games" as DPI
+}
+rectangle "IP/MPLS core" as CORE {
+  queue "LLQ / EF\nlow latency" as LLQ
+  queue "Assured forwarding\npremium / enterprise" as AF
+  queue "Best effort queue" as BEQ
+}
+cloud "IMS core" as IMSCORE
+cloud "Internet/CDN" as INTERNET
+cloud "Corporate network" as VPN
+
+IMS --> DSCP
+DSCP --> LLQ
+LLQ --> IMSCORE
+PREM --> SHP
+SHP --> AF
+AF --> INTERNET
+BE --> DPI
+DPI --> BEQ
+BEQ --> INTERNET
+CORP --> DSCP
+AF --> VPN
+
+note bottom
+Повышение качества группы пользователей обычно делается не
+"магическим ускорением", а отдельным APN, DSCP/MPLS классом,
+лимитами AMBR/MBR, DPI/shaping и выделенным маршрутом.
+end note
+@enduml

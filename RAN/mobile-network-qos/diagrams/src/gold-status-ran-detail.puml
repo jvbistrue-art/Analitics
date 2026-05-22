@@ -1,0 +1,39 @@
+@startuml gold-status-ran-detail
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title Gold-status в RAN: что реально учитывает scheduler
+
+rectangle "Policy context from core" as POL {
+  rectangle "Gold data profile\nhigher AMBR\nQCI/5QI 8/custom\nhigher ARP" as GOLD
+  rectangle "Default data profile\nQCI/5QI 9\nbest effort\nlower ARP" as DEF
+  rectangle "Voice profile\nQCI/5QI 1 + GBR/GFBR\nQCI/5QI 5 signaling" as VOICE
+}
+node "eNodeB/gNB" as RAN {
+  rectangle "Admission Control\nGBR budget, ARP,\ncell load" as ADM
+  rectangle "DRB/QoS queues\nvoice, gold data,\ndefault data" as QUE
+  rectangle "QoS-aware Scheduler\npriority, weight,\nfairness, CQI/SINR" as SCH
+  rectangle "Radio resources\nPRB, slots,\nMIMO layers, beams" as RES
+}
+actor "Gold UE" as GUE
+actor "Default UE" as DUE
+actor "Voice UE" as VUE
+
+GOLD --> ADM
+DEF --> ADM
+VOICE --> ADM
+ADM --> QUE
+QUE --> SCH
+SCH --> RES
+RES --> GUE : more chance of PRB\nunder congestion
+RES --> DUE : elastic throughput\nslows first
+RES --> VUE : low-delay protected\nvoice resources
+
+note bottom of SCH
+Gold-status повышает вероятность ресурса,
+но не создает радиоемкость. UE с плохим SINR
+может потребовать больше PRB на тот же bitrate.
+Строгая гарантия требует GBR/GFBR + admission control.
+end note
+@enduml
