@@ -41,6 +41,7 @@
 | MCS | Modulation and Coding Scheme | Модуляция и кодирование, определяют бит/PRB. |
 | ICIC/eICIC | Inter-Cell Interference Coordination / enhanced ICIC | Снижение межсотовой интерференции. |
 | MLB | Mobility Load Balancing | Перевод UE между сотами/частотами для разгрузки. |
+| Gold-status | Commercial priority tier | Бизнес-статус, который должен быть преобразован в QCI/ARP/AMBR/scheduler weight. |
 
 ## Где применяются политики
 
@@ -82,6 +83,32 @@ GBR bearer + Admission Control + ARP + QoS-aware Scheduler + достаточн�
 
 7. **Load balancing и radio optimization.**  
    MLB, CA, ICIC/eICIC, antenna tilt, power tuning и neighbor optimization увеличивают фактическую емкость и снижают PRB cost для UE.
+
+## Gold-status в LTE RAN
+
+Gold-status не приходит в eNodeB как простой флаг "VIP". В LTE он обычно преобразуется в набор параметров default/dedicated bearer:
+
+```text
+BSS/CRM gold entitlement
+  -> HSS APN/subscriber profile
+  -> PCRF PCC rule
+  -> P-GW/PCEF bearer policy
+  -> MME E-RAB setup
+  -> eNodeB QCI/ARP/GBR/AMBR context
+```
+
+Типовая реализация:
+
+| Абонент/сервис | Bearer | QCI | GBR | Что делает eNodeB |
+|---|---|---:|---|---|
+| Default data | Default bearer | 9 | нет | Best effort, снижает throughput первым. |
+| Gold data | Default bearer с premium QCI или отдельный APN | 6/8/vendor | обычно нет | Дает больший scheduler weight при congestion. |
+| Gold critical service | Dedicated bearer | 3/6/8/vendor | опционально | Отделяет сервис от общего internet bearer. |
+| VoLTE | Dedicated bearer | 1 + 5 | да для RTP | Защищает голос выше, чем gold data. |
+
+Важно: высокий AMBR для gold увеличивает потолок скорости, но не гарантирует PRB при перегрузке. Для гарантии нужен GBR bearer, admission control и достаточная radio capacity.
+
+Подробная сквозная схема: [Gold-status в радио сети](gold-status.md).
 
 ## Голос против data
 

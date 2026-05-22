@@ -32,6 +32,7 @@
 
 ### Сквозные темы
 
+- [Gold-status в радио сети](gold-status.md)
 - [Где хранится QoS-конфигурация и как ей управляют](policy-and-configuration.md)
 - [Глоссарий сокращений](glossary.md)
 
@@ -56,6 +57,8 @@ subscription/group policy
   -> packet core shaping/gating/charging
   -> IP QoS, routing, peering, CDN/MEC
 ```
+
+Коммерческие статусы вроде **gold/silver/bronze** должны быть сначала отражены в BSS/CRM и policy control, а затем превращены в технические параметры: AMBR, QCI/5QI, ARP, scheduler weight, dedicated bearer/QoS Flow или slice. Подробнее: [Gold-status в радио сети](gold-status.md).
 
 ## Ключевые различия LTE и 5G
 

@@ -30,6 +30,7 @@
 | FAR | Forwarding Action Rule | UPF-правило действия пересылки. |
 | GBR | Guaranteed Bit Rate | Гарантированная скорость bearer/flow. |
 | GFBR | Guaranteed Flow Bit Rate | Гарантированная скорость QoS Flow в 5G. |
+| Gold-status | Commercial priority tier | Коммерческий premium-статус, который должен быть преобразован в QoS policy: AMBR, QCI/5QI, ARP, scheduler weight или GBR/GFBR. |
 | gNB | gNodeB | Базовая станция 5G. |
 | GTP-U | GPRS Tunneling Protocol - User Plane | Туннель пользовательских данных в EPC/5GC. |
 | HARQ | Hybrid Automatic Repeat Request | Быстрые повторы ошибочных радиоблоков. |
@@ -74,10 +75,12 @@
 | SDAP | Service Data Adaptation Protocol | Маппинг QoS Flow в DRB в 5G. |
 | SDF | Service Data Flow | Сервисный поток для PCC. |
 | S-GW | Serving Gateway | LTE user-plane anchor. |
+| Scheduler weight | Vendor-specific scheduling weight | Вес radio scheduler для распределения PRB/slots между классами и UE при перегрузке. |
 | SGi | Интерфейс P-GW к external data network | LTE-граница в IP-сеть. |
 | SMF | Session Management Function | 5G session control и UPF programming. |
 | S-NSSAI | Single Network Slice Selection Assistance Information | Идентификатор network slice. |
 | SSB | Synchronization Signal Block | 5G синхронизация и beam discovery. |
+| SPID | Subscriber Profile ID | Идентификатор профиля абонента, который в некоторых реализациях помогает RAN применять subscriber-based handling. |
 | TFT | Traffic Flow Template | LTE-фильтр для binding потока к bearer. |
 | UDM/UDR | Unified Data Management / Repository | 5G подписка и данные политики. |
 | UE | User Equipment | Смартфон, CPE, modem. |

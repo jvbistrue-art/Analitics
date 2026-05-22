@@ -33,6 +33,7 @@ BSS/CRM/Product catalog
 Примеры групп:
 
 - обычные абоненты;
+- gold/silver/bronze;
 - premium data;
 - enterprise APN/DNN;
 - VoLTE/VoNR;
@@ -113,6 +114,32 @@ internet APN/DNN
 ```
 
 Для premium data обычно применяют не строгую гарантию, а higher weight, больший AMBR, лучший route/CDN и менее агрессивный shaping. Строгая гарантия требует GBR/GFBR и admission control.
+
+### Gold-status
+
+Gold-status является коммерческим профилем, поэтому его нужно явно связать с технической policy:
+
+```text
+gold entitlement
+  -> subscriber profile
+  -> PCRF/PCF policy group
+  -> QCI/5QI, ARP, AMBR, optional GBR/GFBR
+  -> RAN scheduler weight/resource share
+  -> IP QoS/DSCP policy
+```
+
+Типовая модель:
+
+| Уровень | Что настроить |
+|---|---|
+| BSS/CRM | Gold entitlement, срок действия, список абонентов или enterprise-группа. |
+| HSS/UDM | Разрешенные APN/DNN, AMBR, S-NSSAI/URSP для 5G. |
+| PCRF/PCF | Policy group: QCI/5QI, ARP, AMBR, charging, gating. |
+| P-GW/UPF | Shaping, DSCP marking, routing, QER/PCEF enforcement. |
+| eNodeB/gNB | QCI/5QI mapping, scheduler weight, admission thresholds, slice share. |
+| IP/MPLS | DSCP/MPLS queues, peering/CDN/service chain. |
+
+Gold-status без RAN scheduler mapping часто дает только больший скоростной лимит. Gold-status со scheduler weight дает преимущество при congestion, но строгая гарантия требует GBR/GFBR и admission control. Подробнее: [Gold-status в радио сети](gold-status.md).
 
 ## Операционный цикл изменения политики
 

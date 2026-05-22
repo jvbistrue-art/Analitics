@@ -39,6 +39,7 @@
 | SSB | Synchronization Signal Block | Синхронизация и beam sweeping. |
 | BWP | Bandwidth Part | Часть полосы NR с отдельной numerology. |
 | CG | Configured Grant | Uplink-ресурс без динамического запроса, полезен для low latency. |
+| Gold-status | Commercial priority tier | Бизнес-статус, который в 5G должен быть преобразован в DNN/S-NSSAI/5QI/ARP/AMBR/scheduler weight. |
 
 ## Где применяются политики
 
@@ -96,6 +97,31 @@ S-NSSAI public safety -> высокий приоритет и pre-emption
 ### 6. Configured Grant для low latency
 
 **Configured Grant** дает UE uplink-ресурс без ожидания динамического grant. Это полезно для малых задержек, но требует аккуратного resource planning, иначе фиксированные ресурсы будут простаивать.
+
+## Gold-status в 5G RAN
+
+В 5G gold-status обычно превращается в policy group в PCF и subscription/profile в UDM/UDR. gNB применяет не бизнес-метку, а технический QoS-контекст:
+
+```text
+BSS/CRM gold entitlement
+  -> UDM/UDR DNN, S-NSSAI, AMBR, URSP
+  -> PCF policy
+  -> SMF PDU Session and QoS Flow
+  -> gNB 5QI/ARP/GFBR/S-NSSAI context
+```
+
+Типовая реализация:
+
+| Абонент/сервис | 5G сущность | 5QI | GFBR | Что делает gNB |
+|---|---|---:|---|---|
+| Default internet | QoS Flow | 9 | нет | Best effort eMBB scheduling. |
+| Gold internet | QoS Flow | 8/custom | обычно нет | Более высокий scheduler weight и Session-AMBR. |
+| Gold enterprise | QoS Flow в enterprise DNN/slice | custom/standard | да, если SLA | Slice-aware admission и protected resources. |
+| VoNR | IMS QoS Flow | 1 + 5 | да для RTP | Low-delay scheduling выше gold data. |
+
+Если vendor RAN поддерживает slice-aware scheduling, gold-группа может получить min/max resource share на S-NSSAI. Без такой поддержки gold чаще реализуется через 5QI priority, Session-AMBR и scheduler weights.
+
+Подробная сквозная схема: [Gold-status в радио сети](gold-status.md).
 
 ## Голос против data
 

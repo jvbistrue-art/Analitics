@@ -1,0 +1,36 @@
+@startuml gold-status-common
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title Gold-status: end-to-end преобразование в QoS-политику
+
+actor "Gold subscriber\nUE" as UE
+database "BSS/CRM\ncommercial status:\ngold/silver/bronze" as BSS
+database "Subscriber DB\nLTE: HSS\n5G: UDM/UDR" as SUB
+database "Policy control\nLTE: PCRF\n5G: PCF" as POL
+rectangle "Session control\nLTE: MME/P-GW\n5G: AMF/SMF" as SESSION
+rectangle "User-plane enforcement\nLTE: P-GW/PCEF\n5G: UPF/QER" as UP
+rectangle "RAN enforcement\nLTE: eNodeB\n5G: gNB" as RAN
+rectangle "IP/MPLS edge\nDSCP, queues,\nDPI, CGNAT" as IP
+cloud "Internet / IMS /\nEnterprise / MEC" as DN
+
+BSS --> SUB : entitlement,\nprofile, AMBR
+BSS --> POL : policy group,\nQoS template
+SUB --> SESSION : subscription data
+POL --> SESSION : QCI/5QI, ARP,\nAMBR, GBR/GFBR,\nAPN/DNN/slice
+SESSION --> UP : bearer/session rules
+SESSION --> RAN : radio QoS context
+UE --> RAN : radio access
+RAN --> UP : user plane tunnel
+UP --> IP : DSCP/shaping/routing
+IP --> DN
+
+note right of RAN
+Базовая станция обычно не видит
+"gold" как бизнес-статус.
+Она видит технический QoS:
+QCI/5QI, ARP, GBR/GFBR,
+AMBR and scheduler profile.
+end note
+@enduml
