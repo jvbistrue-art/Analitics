@@ -27,6 +27,7 @@
 | RAN | Radio Access Network | Радиодоступ от UE до мобильного ядра. |
 | RRC | Radio Resource Control | Подключение UE, настройка bearers, handover, admission. |
 | RRM | Radio Resource Management | Управление радиоресурсами, интерференцией и mobility. |
+| E-RAB | E-UTRAN Radio Access Bearer | Связка LTE EPS bearer с radio bearer и S1 bearer. |
 | DRB | Data Radio Bearer | Радиоканал для пользовательских данных с QoS-профилем. |
 | QCI | QoS Class Identifier | LTE-класс QoS: приоритет, задержка, loss, GBR/non-GBR. |
 | GBR | Guaranteed Bit Rate | Гарантированная минимальная скорость для bearer. |
@@ -83,6 +84,21 @@ GBR bearer + Admission Control + ARP + QoS-aware Scheduler + достаточн�
 
 7. **Load balancing и radio optimization.**  
    MLB, CA, ICIC/eICIC, antenna tilt, power tuning и neighbor optimization увеличивают фактическую емкость и снижают PRB cost для UE.
+
+## Несколько QCI на одном UE
+
+Один UE может одновременно иметь несколько LTE bearers с разными QCI:
+
+```text
+QCI 9 -> ordinary internet
+QCI 5 -> IMS signaling
+QCI 1 -> VoLTE RTP
+QCI 6/8 -> premium/enterprise data, если настроено оператором
+```
+
+В eNodeB это приходит как несколько E-RAB/DRB contexts. RAN scheduler видит не "приложение", а очереди DRB с разными QCI, GBR/ARP и delay budget. Поэтому voice packet может получить PRB раньше, чем file download с того же UE.
+
+Подробное описание и схемы: [Несколько QoS-каналов на одном UE](ue-multiple-qos-channels.md).
 
 ## Gold-status в LTE RAN
 

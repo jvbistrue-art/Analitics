@@ -32,6 +32,7 @@
 
 ### Сквозные темы
 
+- [Несколько QoS-каналов на одном UE](ue-multiple-qos-channels.md)
 - [Gold-status в радио сети](gold-status.md)
 - [Где хранится QoS-конфигурация и как ей управляют](policy-and-configuration.md)
 - [Глоссарий сокращений](glossary.md)
@@ -59,6 +60,8 @@ subscription/group policy
 ```
 
 Коммерческие статусы вроде **gold/silver/bronze** должны быть сначала отражены в BSS/CRM и policy control, а затем превращены в технические параметры: AMBR, QCI/5QI, ARP, scheduler weight, dedicated bearer/QoS Flow или slice. Подробнее: [Gold-status в радио сети](gold-status.md).
+
+На одном UE могут одновременно существовать несколько логических QoS-каналов: в LTE это несколько EPS bearers с разными QCI, в 5G — несколько QoS Flows с разными 5QI/QFI. Подробнее: [Несколько QoS-каналов на одном UE](ue-multiple-qos-channels.md).
 
 ## Ключевые различия LTE и 5G
 

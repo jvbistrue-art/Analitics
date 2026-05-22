@@ -1,0 +1,50 @@
+@startuml ue-multiple-qci-lte
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title LTE UE: несколько EPS bearers с разными QCI
+
+actor "UE\nUser Equipment" as UE
+node "UE protocol stack" as UESTACK {
+  rectangle "Applications\nweb, IMS, video,\nenterprise app" as APPS
+  rectangle "UL TFT packet filters\nIP/port/protocol -> bearer" as ULTFT
+  queue "Default EPS bearer\nQCI 9\ninternet data" as B9
+  queue "Dedicated EPS bearer\nQCI 5\nIMS signaling" as B5
+  queue "Dedicated EPS bearer\nQCI 1\nVoLTE RTP, GBR" as B1
+  queue "Optional premium bearer\nQCI 6/8\noperator policy" as B8
+}
+node "eNodeB RAN" as ENB {
+  rectangle "E-RAB context\none EPS bearer -> one E-RAB" as ERAB
+  rectangle "DRB queues\nradio bearers" as DRB
+  rectangle "MAC scheduler\nQCI/GBR/ARP/CQI" as SCH
+}
+node "EPC" as EPC {
+  rectangle "P-GW/PCEF\nDL TFT/SDF classifier" as PGW
+  database "PCRF\nPCC rules" as PCRF
+}
+cloud "Internet / IMS /\nenterprise network" as DN
+
+UE --> APPS
+APPS --> ULTFT : uplink packets
+ULTFT --> B9
+ULTFT --> B5
+ULTFT --> B1
+ULTFT --> B8
+B9 --> ERAB
+B5 --> ERAB
+B1 --> ERAB
+B8 --> ERAB
+ERAB --> DRB
+DRB --> SCH
+SCH --> PGW : S1-U/S5 GTP-U
+PGW --> DN
+PCRF --> PGW : install PCC/TFT\nQCI, ARP, GBR, MBR
+PGW --> ERAB : bearer setup via MME/eNodeB
+
+note bottom of ULTFT
+UE не выбирает QCI самовольно.
+UL TFT/QoS rules приходят из сети и говорят,
+какой IP-поток отправлять в какой bearer.
+end note
+@enduml

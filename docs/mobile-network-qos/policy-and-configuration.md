@@ -62,6 +62,8 @@ BSS/CRM/Product catalog
 | Premium data | QCI 6/8 non-GBR | 5QI 8 или custom non-GBR |
 | Default internet | QCI 9 | 5QI 9 |
 
+Один UE может иметь несколько QoS-классов одновременно: в LTE через несколько EPS bearers с разными QCI, в 5G через несколько QoS Flows с разными 5QI/QFI. Это позволяет одному устройству одновременно передавать VoLTE/VoNR, IMS signaling, enterprise traffic и ordinary internet с разными приоритетами. Подробности и схемы: [Несколько QoS-каналов на одном UE](ue-multiple-qos-channels.md).
+
 ### 4. Настроить допуск и удержание
 
 Для гарантии нужны:

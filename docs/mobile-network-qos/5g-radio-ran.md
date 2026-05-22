@@ -31,6 +31,7 @@
 | SDAP | Service Data Adaptation Protocol | Маппинг QoS Flow с QFI в DRB. |
 | QoS Flow | Quality of Service Flow | Минимальная 5G-единица QoS. |
 | QFI | QoS Flow Identifier | Метка QoS Flow. |
+| QoS Rule | Quality of Service Rule | Правило UE, которое привязывает uplink packet filters к QFI. |
 | 5QI | 5G QoS Identifier | 5G-класс QoS: priority, delay, loss. |
 | GFBR | Guaranteed Flow Bit Rate | Гарантированная скорость QoS Flow. |
 | MFBR | Maximum Flow Bit Rate | Максимальная скорость QoS Flow. |
@@ -97,6 +98,21 @@ S-NSSAI public safety -> высокий приоритет и pre-emption
 ### 6. Configured Grant для low latency
 
 **Configured Grant** дает UE uplink-ресурс без ожидания динамического grant. Это полезно для малых задержек, но требует аккуратного resource planning, иначе фиксированные ресурсы будут простаивать.
+
+## Несколько 5QI на одном UE
+
+В 5G один UE может иметь несколько QoS Flows с разными 5QI/QFI внутри одной или нескольких PDU Sessions:
+
+```text
+5QI 9 -> ordinary internet
+5QI 5 -> IMS signaling
+5QI 1 -> VoNR RTP
+custom 5QI -> premium/enterprise flow
+```
+
+Через SDAP gNB маппит QoS Flows в DRB. Несколько QoS Flows могут быть сгруппированы в один DRB или разнесены по разным DRB. Разнесение дает scheduler больше возможностей отделить voice/critical traffic от best effort data.
+
+Подробное описание и схемы: [Несколько QoS-каналов на одном UE](ue-multiple-qos-channels.md).
 
 ## Gold-status в 5G RAN
 

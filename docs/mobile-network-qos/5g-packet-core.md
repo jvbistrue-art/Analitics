@@ -40,6 +40,7 @@
 | NSSF | Network Slice Selection Function | Выбор slice. |
 | DNN | Data Network Name | Имя сети данных, аналог APN по смыслу. |
 | PDU Session | Protocol Data Unit Session | Логическое подключение UE к DNN. |
+| QoS Rule | Quality of Service Rule | Правило UE для uplink-классификации пакетов в QFI. |
 | PDR | Packet Detection Rule | Правило UPF для обнаружения пакета. |
 | FAR | Forwarding Action Rule | Правило UPF, куда переслать пакет. |
 | QER | QoS Enforcement Rule | Правило UPF для rate/QoS enforcement. |
@@ -111,7 +112,20 @@ UPF применяет:
 - usage reporting;
 - branching/local breakout.
 
-### 6. UPF selection
+### 6. Несколько QoS Flows на одном UE
+
+Одна PDU Session может содержать несколько QoS Flows с разными 5QI/QFI:
+
+```text
+5QI 9 -> default internet
+5QI 5 -> IMS signaling
+5QI 1 -> VoNR RTP
+custom 5QI -> enterprise/premium application
+```
+
+UE получает QoS Rules для uplink-классификации, UPF получает PDR/QER для downlink/uplink enforcement, а gNB получает QoS profile для radio scheduling. Подробная схема: [Несколько QoS-каналов на одном UE](ue-multiple-qos-channels.md).
+
+### 7. UPF selection
 
 SMF выбирает UPF:
 

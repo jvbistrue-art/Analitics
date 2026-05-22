@@ -1,0 +1,59 @@
+@startuml ue-multiple-qos-5g
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title 5G UE: несколько QoS Flows с разными 5QI
+
+actor "UE\nUser Equipment" as UE
+node "UE protocol stack" as UESTACK {
+  rectangle "Applications\nweb, IMS, gaming,\nenterprise app" as APPS
+  rectangle "QoS Rules\npacket filters -> QFI" as QRULES
+  queue "QoS Flow\nQFI A / 5QI 9\nbest effort data" as Q9
+  queue "QoS Flow\nQFI B / 5QI 5\nIMS signaling" as Q5
+  queue "QoS Flow\nQFI C / 5QI 1\nVoNR RTP, GFBR" as Q1
+  queue "QoS Flow\nQFI D / custom 5QI\npremium/enterprise" as QC
+}
+node "gNB RAN" as GNB {
+  rectangle "SDAP\nQFI -> DRB mapping" as SDAP
+  queue "DRB 1\nbest effort" as DRB1
+  queue "DRB 2\nvoice/signaling" as DRB2
+  queue "DRB 3\npremium/enterprise" as DRB3
+  rectangle "MAC scheduler\n5QI/GFBR/ARP/slice/CQI" as SCH
+}
+node "5G Core" as CORE {
+  rectangle "SMF\nPDU Session and QoS rules" as SMF
+  rectangle "UPF\nPDR/QER enforcement" as UPF
+  database "PCF\npolicy decision" as PCF
+}
+cloud "Data Network\nInternet / IMS / MEC /\nenterprise" as DN
+
+UE --> APPS
+APPS --> QRULES : uplink packets
+QRULES --> Q9
+QRULES --> Q5
+QRULES --> Q1
+QRULES --> QC
+Q9 --> SDAP
+Q5 --> SDAP
+Q1 --> SDAP
+QC --> SDAP
+SDAP --> DRB1
+SDAP --> DRB2
+SDAP --> DRB3
+DRB1 --> SCH
+DRB2 --> SCH
+DRB3 --> SCH
+SCH --> UPF : N3 GTP-U
+UPF --> DN : N6
+PCF --> SMF : 5QI, ARP,\nGFBR/MFBR, policy
+SMF --> QRULES : QoS rules to UE
+SMF --> SDAP : QoS profile to gNB
+SMF --> UPF : N4 PDR/QER
+
+note bottom of SDAP
+В 5G несколько QoS Flows могут идти
+в один DRB или в разные DRB. От этого зависит,
+насколько явно gNB сможет разделять radio priority.
+end note
+@enduml

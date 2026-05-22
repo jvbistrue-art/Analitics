@@ -37,6 +37,7 @@
 | PCRF | Policy and Charging Rules Function | Центр policy decision в LTE. |
 | PCC | Policy and Charging Control | Архитектура policy + charging. |
 | EPS bearer | Evolved Packet System bearer | Логический канал с QoS от UE до P-GW. |
+| EBI | EPS Bearer Identity | Идентификатор EPS bearer, нужен UE/core для различения bearers. |
 | Default bearer | Default EPS bearer | Создается при подключении к APN, обычно internet best effort. |
 | Dedicated bearer | Dedicated EPS bearer | Дополнительный bearer для конкретного сервиса/QoS. |
 | TFT | Traffic Flow Template | IP-фильтры, связывающие поток с bearer. |
@@ -95,6 +96,8 @@ QCI 9 default bearer -> web/video/social
 QCI 5 dedicated bearer -> IMS SIP signaling
 QCI 1 dedicated bearer -> VoLTE RTP
 ```
+
+Один UE может одновременно иметь несколько EPS bearers с разными QCI. В uplink UE использует TFT, чтобы выбрать bearer для пакета; в downlink P-GW/PCEF классифицирует поток по SDF/TFT и отправляет его в нужный bearer. Подробная схема: [Несколько QoS-каналов на одном UE](ue-multiple-qos-channels.md).
 
 ### 4. TFT/SDF classification
 

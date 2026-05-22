@@ -18,15 +18,20 @@
 | CHF | Charging Function | Charging в 5G. |
 | CQI | Channel Quality Indicator | Индикатор качества канала от UE. |
 | CSI-RS | Channel State Information Reference Signal | 5G-сигналы измерения канала/beam. |
+| Dedicated bearer | Dedicated EPS bearer | Дополнительный LTE bearer для отдельного сервиса с собственным QCI/ARP/GBR. |
+| Default bearer | Default EPS bearer | Базовый LTE bearer для APN, обычно переносит обычный internet data. |
 | DNN | Data Network Name | 5G-аналог APN по роли подключения к сети данных. |
 | DPI | Deep Packet Inspection | Классификация приложений и traffic policy. |
 | DRB | Data Radio Bearer | Радиоканал пользовательских данных. |
 | DSCP | Differentiated Services Code Point | IP-маркировка QoS. |
+| EBI | EPS Bearer Identity | Идентификатор EPS bearer, по которому UE и EPC различают bearers. |
+| E-RAB | E-UTRAN Radio Access Bearer | Связка EPS bearer с LTE radio bearer и S1 bearer до EPC. |
 | eICIC | enhanced Inter-Cell Interference Coordination | Координация интерференции LTE HetNet. |
 | eMBB | enhanced Mobile Broadband | 5G-сценарий массового broadband. |
 | eNodeB | evolved NodeB | Базовая станция LTE. |
 | EPC | Evolved Packet Core | Пакетное ядро LTE. |
 | EPS | Evolved Packet System | LTE-система целиком: UE, RAN, EPC. |
+| EPS bearer | Evolved Packet System bearer | LTE-логический канал от UE до P-GW с одним QoS-профилем. |
 | FAR | Forwarding Action Rule | UPF-правило действия пересылки. |
 | GBR | Guaranteed Bit Rate | Гарантированная скорость bearer/flow. |
 | GFBR | Guaranteed Flow Bit Rate | Гарантированная скорость QoS Flow в 5G. |
@@ -54,11 +59,13 @@
 | NSSF | Network Slice Selection Function | Выбор network slice в 5G. |
 | OCS/OFCS | Online/Offline Charging System | Charging и квоты LTE. |
 | OSS | Operations Support System | Системы эксплуатации и управления сетью. |
+| Packet filter | Packet filter | Правило сопоставления IP-пакета по адресу, порту, протоколу или precedence. |
 | PCC | Policy and Charging Control | Policy + charging архитектура. |
 | PCEF | Policy and Charging Enforcement Function | Enforcement-функция на P-GW. |
 | PCF | Policy Control Function | Policy decision в 5G. |
 | PCRF | Policy and Charging Rules Function | Policy decision в LTE. |
 | PDCP | Packet Data Convergence Protocol | Шифрование, compression, reordering. |
+| PDN Connection | Packet Data Network Connection | LTE-подключение UE к APN; внутри него есть default и dedicated bearers. |
 | PDR | Packet Detection Rule | UPF-правило распознавания пакета. |
 | PDU Session | Protocol Data Unit Session | 5G-сессия UE к DNN. |
 | P-GW | Packet Data Network Gateway | LTE IP anchor и выход к APN. |
@@ -66,6 +73,8 @@
 | QCI | QoS Class Identifier | Класс QoS в LTE. |
 | QER | QoS Enforcement Rule | UPF-правило QoS enforcement. |
 | QFI | QoS Flow Identifier | Идентификатор QoS Flow в 5G. |
+| QoS Flow | Quality of Service Flow | Минимальная 5G-единица QoS внутри PDU Session. |
+| QoS Rule | Quality of Service Rule | 5G-правило UE для привязки uplink-пакетов к QFI. |
 | QoS | Quality of Service | Набор механизмов качества: delay, loss, priority, bitrate. |
 | RAN | Radio Access Network | Радиосеть от UE до core. |
 | RLC | Radio Link Control | Буферы, сегментация и повторы. |
