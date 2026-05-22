@@ -55,7 +55,7 @@
 | PCF | policy rules, групповые профили, AF-запросы | Выдает session и QoS decisions для SMF. |
 | SMF | PDU Session, UPF selection, QoS rules | Настраивает gNB через N2 и UPF через N4. |
 | UPF | PDR/FAR/QER/URR | Применяет forwarding, shaping, marking, usage reporting. |
-| gNB | 5QI/ARP/GFBR/MFBR, DRB mapping | Применяет radio scheduling. |
+| gNB | 5QI/ARP/GFBR/MFBR, QFI -> DRB mapping через SDAP/RRC/OAM | Применяет radio scheduling; SMF передает QoS profile, но не назначает DRB напрямую. |
 
 ## Механизмы качества для группы пользователей
 
@@ -80,7 +80,7 @@ Slice позволяет отделить логическую сеть:
 ```text
 eMBB slice        -> массовый broadband
 enterprise slice  -> корпоративный SLA
-public safety     -> высокий приоритет/pre-emption
+public safety     -> высокий resource share; pre-emption выполняется через ARP у QoS Flows внутри slice
 URLLC-like slice   -> low latency design
 ```
 

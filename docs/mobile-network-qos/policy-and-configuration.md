@@ -23,7 +23,7 @@ BSS/CRM/Product catalog
 | Policy decision | PCRF | PCF | PCC rules: QoS, charging, gating, service priority. |
 | Session control | MME + P-GW | AMF + SMF | Создание bearer/PDU Session, доставка QoS в RAN и UPF. |
 | User-plane enforcement | P-GW/PCEF | UPF | Shaping, gating, DSCP marking, charging reports. |
-| Radio enforcement | eNodeB | gNB | Admission, scheduler, DRB mapping, PRB allocation. |
+| Radio enforcement | eNodeB | gNB | Admission, scheduler, radio queue/DRB mapping, PRB allocation. |
 | IP enforcement | SGi routers/FW/DPI | N6 routers/FW/DPI/MEC | DSCP/MPLS queues, CGNAT, firewall, DPI, peering/CDN. |
 
 ## Как управлять приоритетом группы пользователей
@@ -59,18 +59,20 @@ BSS/CRM/Product catalog
 | Voice RTP | QCI 1, GBR | 5QI 1, GBR/GFBR |
 | IMS signaling | QCI 5 | 5QI 5 |
 | Critical enterprise | QCI 3/65/66 или vendor policy | Standard/custom 5QI + GFBR |
-| Premium data | QCI 6/8 non-GBR | 5QI 8 или custom non-GBR |
+| Premium data | QCI 8 или operator-defined non-GBR QCI | 5QI 8 или custom non-GBR |
 | Default internet | QCI 9 | 5QI 9 |
 
 Один UE может иметь несколько QoS-классов одновременно: в LTE через несколько EPS bearers с разными QCI, в 5G через несколько QoS Flows с разными 5QI/QFI. Это позволяет одному устройству одновременно передавать VoLTE/VoNR, IMS signaling, enterprise traffic и ordinary internet с разными приоритетами. Подробности и схемы: [Несколько QoS-каналов на одном UE](ue-multiple-qos-channels.md).
+
+Примечание: стандартный QCI 6 относится к GBR-видео и не должен описываться как обычный non-GBR premium internet без явного GBR SLA.
 
 ### 4. Настроить допуск и удержание
 
 Для гарантии нужны:
 
-- **GBR/GFBR** — минимальный bitrate;
+- **GBR/GFBR** — целевой минимальный bitrate после успешного admission control и при достаточной емкости;
 - **Admission Control** — не принимать больше гарантированных потоков, чем сеть выдержит;
-- **ARP** — кто может вытеснять и кто может быть вытеснен;
+- **ARP** — кто может быть допущен/удержан и кто может вытеснять при setup/retention;
 - **scheduler weights/resource share** — как RAN делит PRB;
 - **AMBR/MBR/MFBR** — чтобы ограничить excess traffic.
 
@@ -165,3 +167,5 @@ Gold-status без RAN scheduler mapping часто дает только бол
 - Сохраняется ли DSCP после P-GW/UPF?
 - Есть ли congestion на CGNAT/FW/DPI/IP/MPLS/peering?
 - Какие KPI докажут, что качество реально улучшилось?
+
+Сводная матрица влияния каждого подхода на пользовательский опыт и бизнес-ценность приведена в документе [Пользовательский опыт и бизнес-ценность QoS-подходов](ux-business-value.md).

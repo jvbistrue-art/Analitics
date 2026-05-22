@@ -36,6 +36,8 @@ PCRF --> ENB : policy reaches RAN\nvia bearer setup
 note right of MAC
 Здесь политика становится радио-действием:
 QCI priority, GBR debt, delay budget,
-ARP/pre-emption, scheduler weight.
+scheduler weight and CQI/fairness.
+ARP/pre-emption применяется на admission/retention,
+а не как per-packet scheduler priority.
 end note
 @enduml

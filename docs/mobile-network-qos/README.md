@@ -34,6 +34,7 @@
 
 - [Несколько QoS-каналов на одном UE](ue-multiple-qos-channels.md)
 - [Gold-status в радио сети](gold-status.md)
+- [Пользовательский опыт и бизнес-ценность QoS-подходов](ux-business-value.md)
 - [Где хранится QoS-конфигурация и как ей управляют](policy-and-configuration.md)
 - [Глоссарий сокращений](glossary.md)
 
@@ -53,7 +54,7 @@ UE
 subscription/group policy
   -> APN/DNN/slice selection
   -> bearer/QoS Flow with QCI/5QI
-  -> ARP and admission control
+  -> GBR/GFBR, ARP and admission control
   -> RAN scheduler priority/resource reservation
   -> packet core shaping/gating/charging
   -> IP QoS, routing, peering, CDN/MEC

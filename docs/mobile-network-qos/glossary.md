@@ -5,7 +5,7 @@
 | 5GC | 5G Core | Пакетное ядро 5G. |
 | 5QI | 5G QoS Identifier | Класс QoS в 5G: priority, delay, loss, GBR/non-GBR. |
 | AF | Application Function | Приложение, которое может запросить QoS через PCF/NEF. |
-| AMBR | Aggregate Maximum Bit Rate | Суммарный лимит скорости UE/APN/session. |
+| AMBR | Aggregate Maximum Bit Rate | Суммарный лимит скорости UE/APN/session; ограничивает throughput, но сам не задает radio scheduling priority. |
 | AMF | Access and Mobility Management Function | Регистрация UE, access control, mobility в 5G. |
 | APN | Access Point Name | Имя сети данных в LTE: internet, ims, enterprise. |
 | ARP | Allocation and Retention Priority | Приоритет допуска/удержания и pre-emption bearer/flow. |
@@ -33,8 +33,8 @@
 | EPS | Evolved Packet System | LTE-система целиком: UE, RAN, EPC. |
 | EPS bearer | Evolved Packet System bearer | LTE-логический канал от UE до P-GW с одним QoS-профилем. |
 | FAR | Forwarding Action Rule | UPF-правило действия пересылки. |
-| GBR | Guaranteed Bit Rate | Гарантированная скорость bearer/flow. |
-| GFBR | Guaranteed Flow Bit Rate | Гарантированная скорость QoS Flow в 5G. |
+| GBR | Guaranteed Bit Rate | Целевая минимальная скорость LTE bearer после успешного admission control и при достаточной емкости соты. |
+| GFBR | Guaranteed Flow Bit Rate | Целевая минимальная скорость 5G QoS Flow после успешного admission control и при достаточной емкости соты. |
 | Gold-status | Commercial priority tier | Коммерческий premium-статус, который должен быть преобразован в QoS policy: AMBR, QCI/5QI, ARP, scheduler weight или GBR/GFBR. |
 | gNB | gNodeB | Базовая станция 5G. |
 | GTP-U | GPRS Tunneling Protocol - User Plane | Туннель пользовательских данных в EPC/5GC. |

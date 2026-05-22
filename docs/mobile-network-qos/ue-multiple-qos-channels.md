@@ -16,7 +16,7 @@
 несколько QoS Flows с разными 5QI
 ```
 
-Важно: здесь "канал" означает логическую QoS-сущность: **EPS bearer**, **E-RAB**, **DRB** или **QoS Flow**. Это не отдельная физическая радиочастота для каждого приложения. Все потоки UE конкурируют за общие radio resources соты, а **eNodeB/gNB scheduler** решает, какие очереди обслужить первыми.
+Важно: здесь "канал" означает логическую QoS-сущность. На уровне core это **EPS bearer** в LTE или **QoS Flow** в 5G. **DRB (Data Radio Bearer)** — radio transport: в LTE он обычно соответствует bearer 1:1, а в 5G через SDAP может переносить один или несколько QoS Flows. Это не отдельная физическая радиочастота для каждого приложения. Все потоки UE конкурируют за общие radio resources соты, а **eNodeB/gNB scheduler** решает, какие radio queues обслужить первыми.
 
 ## LTE-схема
 
@@ -59,9 +59,9 @@
 | QER | QoS Enforcement Rule | UPF-правило для rate enforcement, marking и gating. |
 | SDAP | Service Data Adaptation Protocol | 5G-уровень, который маппит QoS Flow/QFI в DRB. |
 | ARP | Allocation and Retention Priority | Приоритет допуска/удержания bearer/flow и pre-emption. |
-| GBR | Guaranteed Bit Rate | LTE-гарантированная скорость bearer. |
-| GFBR | Guaranteed Flow Bit Rate | 5G-гарантированная скорость QoS Flow. |
-| AMBR | Aggregate Maximum Bit Rate | Суммарный лимит скорости UE/APN/session. |
+| GBR | Guaranteed Bit Rate | LTE-целевой minimum bitrate после успешного admission control и при достаточной емкости. |
+| GFBR | Guaranteed Flow Bit Rate | 5G-целевой minimum bitrate QoS Flow после successful admission и при достаточной емкости. |
+| AMBR | Aggregate Maximum Bit Rate | Суммарный лимит скорости UE/APN/session; не является radio scheduling priority. |
 
 ## LTE: как один UE получает несколько QCI
 
@@ -74,7 +74,7 @@ UE
   -> default bearer, QCI 9: ordinary internet
   -> dedicated bearer, QCI 5: IMS signaling
   -> dedicated bearer, QCI 1: VoLTE RTP
-  -> optional dedicated/default policy bearer, QCI 6/8: premium data
+  -> optional dedicated/default policy bearer, QCI 8/operator-defined: premium data
 ```
 
 ### Как создается
@@ -103,7 +103,7 @@ TFT говорит UE:
 SIP signaling -> bearer QCI 5
 RTP voice -> bearer QCI 1
 ordinary TCP/UDP internet -> bearer QCI 9
-enterprise flow -> bearer QCI 6/8/custom
+enterprise flow -> bearer QCI 8/operator-defined non-GBR или GBR QCI для SLA
 ```
 
 Если пакет не совпал с dedicated bearer TFT, он обычно идет в default bearer.
@@ -125,15 +125,15 @@ Internet/IMS packet
 
 В 5G термин **QCI** не используется для новых 5G-сессий; его роль выполняет **5QI (5G QoS Identifier)**.
 
-У одного UE может быть одна **PDU Session** с несколькими **QoS Flows**:
+У одного UE может быть одна **PDU Session** с несколькими **QoS Flows** для одного **DNN (Data Network Name)**:
 
 ```text
-PDU Session: DNN internet/ims/enterprise
+PDU Session: DNN internet
   -> QoS Flow QFI A, 5QI 9: best effort
-  -> QoS Flow QFI B, 5QI 5: IMS signaling
-  -> QoS Flow QFI C, 5QI 1: VoNR RTP
-  -> QoS Flow QFI D, custom 5QI: enterprise/premium
+  -> QoS Flow QFI D, custom 5QI: premium application
 ```
+
+Если UE одновременно использует разные DNN, например `internet`, `ims` и `enterprise`, это обычно несколько PDU Sessions. Внутри каждой PDU Session могут быть свои QoS Flows.
 
 ### Как создается
 
@@ -170,7 +170,7 @@ LTE: EPS bearer -> E-RAB -> DRB -> RLC/MAC queue
 - QCI/5QI priority;
 - delay budget;
 - GBR/GFBR debt;
-- ARP/admission state;
+- admission state; ARP уже применен на этапе допуска/удержания QoS Flow или bearer;
 - radio conditions: CQI/SINR;
 - fairness;
 - scheduler weight;
@@ -243,7 +243,7 @@ DSCP от приложения обычно не считается надежн
 | Packet filters | TFT на UE и P-GW/PCEF | QoS Rules на UE, PDR на UPF |
 | User-plane enforcement | P-GW/PCEF | UPF/QER |
 | Radio mapping | eNodeB QCI -> DRB/scheduler profile | gNB 5QI/QFI -> DRB/scheduler profile |
-| Групповой приоритет | APN, QCI, ARP, AMBR, PCC group | DNN, S-NSSAI, 5QI, ARP, Session-AMBR, policy group |
+| Групповой приоритет | APN, PCC group, QCI/scheduler weight; ARP для admission/retention, AMBR для лимита | DNN, S-NSSAI, policy group, 5QI/scheduler weight; ARP для admission/retention, Session-AMBR для лимита |
 
 ## Короткое резюме
 

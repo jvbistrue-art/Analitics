@@ -115,4 +115,4 @@ DPI может классифицировать:
 | IP/MPLS QoS queues | Router configs, NMS, SDN controller | IP/MPLS team |
 | Peering/CDN policy | BGP routers, peering DB, CDN portals | IP backbone/peering team |
 
-Главный контрольный принцип: QoS должен быть end-to-end. Если IP-домен сбрасывает DSCP или кладет весь трафик в одну очередь, мобильные QCI/ARP перестают давать эффект после P-GW.
+Главный контрольный принцип: QoS должен быть end-to-end. После P-GW действуют IP-механизмы DSCP/MPLS queues, policing и shaping; ARP не передается в IP-домен, а QCI должен быть явно преобразован в IP QoS-класс.

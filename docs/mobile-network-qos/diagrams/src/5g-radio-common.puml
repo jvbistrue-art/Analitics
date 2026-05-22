@@ -8,10 +8,9 @@ title 5G NR Radio/RAN: общая схема QoS Flow в gNB
 actor "UE\n5G device" as UE
 node "gNB" as GNB {
   rectangle "gNB-CU-CP\nRRC, mobility,\nadmission control" as CUCP
-  rectangle "gNB-CU-UP\nPDCP, user plane" as CUUP
+  rectangle "gNB-CU-UP\nSDAP/PDCP,\nuser plane" as CUUP
   rectangle "gNB-DU\nRLC/MAC scheduler" as DU
   rectangle "Radio Unit\nPHY/RF, beamforming" as RU
-  rectangle "SDAP\nQoS Flow -> DRB" as SDAP
 }
 node "5G Core" as CORE {
   rectangle "AMF\naccess control" as AMF
@@ -24,8 +23,7 @@ cloud "Data Network\nInternet / IMS / MEC / enterprise" as DN
 
 UE <--> RU : NR-Uu\nbeams, slots, PRB
 RU --> DU
-DU --> SDAP
-SDAP --> CUUP
+DU --> CUUP : F1-U\nDRB transport
 CUCP --> AMF : N2 control
 CUUP --> UPF : N3 GTP-U
 SMF --> UPF : N4 rules
@@ -38,7 +36,8 @@ UDM --> SMF : subscription/DNN/slice
 note right of DU
 RAN применяет:
 5QI priority, GFBR debt,
-packet delay budget, ARP,
+packet delay budget,
 slice quota and scheduler weight.
+ARP применяется на admission/retention.
 end note
 @enduml

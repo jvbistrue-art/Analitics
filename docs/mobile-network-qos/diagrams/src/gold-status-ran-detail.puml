@@ -6,7 +6,7 @@ skinparam defaultFontName DejaVu Sans
 title Gold-status в RAN: что реально учитывает scheduler
 
 rectangle "Policy context from core" as POL {
-  rectangle "Gold data profile\nhigher AMBR\nQCI/5QI 6/8/custom\nhigher ARP" as GOLD
+  rectangle "Gold data profile\nhigher AMBR\nQCI/5QI 8/custom\nhigher ARP" as GOLD
   rectangle "Default data profile\nQCI/5QI 9\nbest effort\nlower ARP" as DEF
   rectangle "Voice profile\nQCI/5QI 1 + GBR/GFBR\nQCI/5QI 5 signaling" as VOICE
 }

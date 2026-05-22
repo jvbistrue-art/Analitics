@@ -12,6 +12,8 @@
 
 Источник: [5g-radio-private.puml](diagrams/src/5g-radio-private.puml)
 
+Эта схема показывает пример, где критичные QoS Flows разнесены по отдельным DRB. В реальной конфигурации несколько QoS Flows могут быть агрегированы в один DRB, если operator/RAN vendor profile допускает такую модель.
+
 ## Роль блока
 
 **5G RAN (5th Generation Radio Access Network)** управляет NR-радиодоступом. Узел **gNB (gNodeB)** может быть разделен на **CU-CP**, **CU-UP**, **DU** и **RU**. В 5G RAN появляется более явная связка QoS с service flows: **QoS Flow** с **QFI** маппится через **SDAP** в **DRB**.
@@ -66,7 +68,7 @@ QoS Flow: custom 5QI, GFBR -> enterprise critical app
 
 ### 2. SDAP mapping в DRB
 
-Если критичный QoS Flow попадает в отдельный DRB, gNB может точнее применять scheduler priority и discard timers. Если несколько flows объединены в один DRB, управление проще, но изоляция хуже.
+Если критичный QoS Flow попадает в отдельный DRB, gNB может точнее применять scheduler priority и discard timers. Если несколько flows объединены в один DRB, управление проще, но изоляция хуже. SMF передает QoS profile, а конкретный QFI -> DRB mapping выполняется в UE/gNB через SDAP и RRC/OAM-профили; SMF не назначает DRB напрямую.
 
 ### 3. Slice-aware scheduling
 
@@ -75,14 +77,14 @@ QoS Flow: custom 5QI, GFBR -> enterprise critical app
 ```text
 S-NSSAI enterprise -> минимальная доля ресурса
 S-NSSAI public internet -> best effort pool
-S-NSSAI public safety -> высокий приоритет и pre-emption
+S-NSSAI public safety -> высокий resource share; pre-emption задается ARP у QoS Flows внутри slice
 ```
 
 В реальных сетях возможности зависят от vendor RAN: scheduler weights, min/max resource share, admission thresholds per slice.
 
 ### 4. GFBR/MFBR и admission control
 
-**GFBR** работает как гарантия только вместе с admission control. gNB/SMF не должны принимать больше guaranteed flows, чем radio может обслужить.
+**GFBR** работает как гарантия только вместе с admission control. gNB как RAN admission point не должен принимать guaranteed flows сверх radio-емкости; SMF может отклонить создание QoS Flow по policy до передачи в RAN.
 
 ### 5. Beamforming и Massive MIMO
 

@@ -19,7 +19,7 @@ node "gNB RAN" as GNB {
   queue "DRB 1\nbest effort" as DRB1
   queue "DRB 2\nvoice/signaling" as DRB2
   queue "DRB 3\npremium/enterprise" as DRB3
-  rectangle "MAC scheduler\n5QI/GFBR/ARP/slice/CQI" as SCH
+  rectangle "MAC scheduler\n5QI/GFBR/slice/CQI/weight" as SCH
 }
 node "5G Core" as CORE {
   rectangle "SMF\nPDU Session and QoS rules" as SMF

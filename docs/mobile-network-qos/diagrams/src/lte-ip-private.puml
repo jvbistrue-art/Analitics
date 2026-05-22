@@ -7,7 +7,7 @@ title LTE IP после P-GW: детальная схема классов тр�
 
 rectangle "P-GW/PCEF" as PGW {
   queue "IMS / VoLTE\nQCI 1/5 mapped to EF/CS" as IMS
-  queue "Premium data\nQCI 6/8, higher weight" as PREM
+  queue "Premium data\nQCI 8/vendor, higher weight" as PREM
   queue "Default internet\nQCI 9, best effort" as BE
   queue "Enterprise APN\nprivate route + SLA" as CORP
 }

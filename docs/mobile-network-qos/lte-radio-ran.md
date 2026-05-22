@@ -30,7 +30,7 @@
 | E-RAB | E-UTRAN Radio Access Bearer | Связка LTE EPS bearer с radio bearer и S1 bearer. |
 | DRB | Data Radio Bearer | Радиоканал для пользовательских данных с QoS-профилем. |
 | QCI | QoS Class Identifier | LTE-класс QoS: приоритет, задержка, loss, GBR/non-GBR. |
-| GBR | Guaranteed Bit Rate | Гарантированная минимальная скорость для bearer. |
+| GBR | Guaranteed Bit Rate | Целевой minimum bitrate для bearer после successful admission control и при достаточной емкости соты. |
 | MBR | Maximum Bit Rate | Верхний лимит скорости для bearer. |
 | ARP | Allocation and Retention Priority | Допуск/удержание bearer и вытеснение при перегрузке. |
 | PRB | Physical Resource Block | Базовая единица радиоресурса в LTE. |
@@ -93,10 +93,10 @@ GBR bearer + Admission Control + ARP + QoS-aware Scheduler + достаточн�
 QCI 9 -> ordinary internet
 QCI 5 -> IMS signaling
 QCI 1 -> VoLTE RTP
-QCI 6/8 -> premium/enterprise data, если настроено оператором
+QCI 8/operator-defined -> premium/enterprise data, если настроено оператором
 ```
 
-В eNodeB это приходит как несколько E-RAB/DRB contexts. RAN scheduler видит не "приложение", а очереди DRB с разными QCI, GBR/ARP и delay budget. Поэтому voice packet может получить PRB раньше, чем file download с того же UE.
+В eNodeB это приходит как несколько E-RAB/DRB contexts. RAN scheduler видит не "приложение", а очереди DRB с разными QCI, GBR/MBR и delay budget. ARP уже применяется на этапе E-RAB admission/retention. Поэтому voice packet может получить PRB раньше, чем file download с того же UE.
 
 Подробное описание и схемы: [Несколько QoS-каналов на одном UE](ue-multiple-qos-channels.md).
 
@@ -118,8 +118,8 @@ BSS/CRM gold entitlement
 | Абонент/сервис | Bearer | QCI | GBR | Что делает eNodeB |
 |---|---|---:|---|---|
 | Default data | Default bearer | 9 | нет | Best effort, снижает throughput первым. |
-| Gold data | Default bearer с premium QCI или отдельный APN | 6/8/vendor | обычно нет | Дает больший scheduler weight при congestion. |
-| Gold critical service | Dedicated bearer | 3/6/8/vendor | опционально | Отделяет сервис от общего internet bearer. |
+| Gold data | Default bearer с premium QCI или отдельный APN | 8/vendor non-GBR | обычно нет | Дает больший scheduler weight при congestion. |
+| Gold critical service | Dedicated bearer | 3/6/vendor GBR или 8/vendor non-GBR | опционально | Отделяет сервис от общего internet bearer. |
 | VoLTE | Dedicated bearer | 1 + 5 | да для RTP | Защищает голос выше, чем gold data. |
 
 Важно: высокий AMBR для gold увеличивает потолок скорости, но не гарантирует PRB при перегрузке. Для гарантии нужен GBR bearer, admission control и достаточная radio capacity.

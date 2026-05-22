@@ -41,7 +41,7 @@ Gold-status в BSS/CRM
 | 5QI | 5G QoS Identifier | 5G-класс QoS для QoS Flow. |
 | ARP | Allocation and Retention Priority | Приоритет допуска/удержания bearer/flow и pre-emption. |
 | AMBR | Aggregate Maximum Bit Rate | Суммарный лимит скорости. Повышает потолок, но сам не гарантирует ресурс. |
-| GBR/GFBR | Guaranteed Bit Rate / Guaranteed Flow Bit Rate | Минимальная гарантированная скорость для bearer/QoS Flow. |
+| GBR/GFBR | Guaranteed Bit Rate / Guaranteed Flow Bit Rate | Целевой minimum bitrate для bearer/QoS Flow после успешного admission control и при достаточной емкости. |
 | Scheduler weight | Vendor-specific scheduling weight | Вес в RAN scheduler, определяет долю ресурса при конкуренции. |
 | SPID | Subscriber Profile ID | Vendor/3GPP-used profile identifier для subscriber-based RAN handling в некоторых реализациях. |
 
@@ -54,7 +54,7 @@ Gold-status в BSS/CRM
 | Scheduler weight | eNodeB/gNB дает gold-классу больший вес | При congestion gold получает большую долю PRB | Vendor-specific, требует RAN-настройки |
 | Более высокий ARP | Bearer/flow легче принять и сложнее вытеснить | Лучше сохраняет сессию при дефиците ресурсов | ARP не ускоряет каждый пакет |
 | Dedicated bearer / QoS Flow | Для конкретного сервиса создается отдельная QoS-сущность | Сервис gold-клиента отделяется от best effort | Сложно применять ко всему интернету |
-| GBR/GFBR | Сеть обещает минимальный bitrate | Реальная гарантия для критичного сервиса | Нужен admission control и емкость |
+| GBR/GFBR | Сеть принимает обязательство на minimum bitrate после admission | Реальная гарантия для критичного сервиса при наличии radio capacity | Нужен admission control и емкость |
 | Slice/DNN/APN | Gold-группа уходит в отдельный service boundary | Удобно для enterprise/premium/5G slicing | Требует end-to-end настройки core/RAN/IP |
 
 ## LTE-реализация
@@ -68,7 +68,7 @@ UE attach
   -> PCRF видит gold policy group
   -> P-GW/PCEF получает PCC rule
   -> default/dedicated bearer получает QCI/ARP/AMBR/GBR
-  -> eNodeB применяет QCI/ARP/GBR в admission и scheduler
+  -> eNodeB применяет ARP/GBR в admission и QCI/GBR в scheduler
 ```
 
 Типовые варианты:
@@ -76,8 +76,8 @@ UE attach
 | Класс | Bearer | QCI | GBR | ARP | Radio behavior |
 |---|---|---:|---|---|---|
 | Default internet | default bearer | 9 | нет | низкий | Best effort, деградирует первым. |
-| Gold internet | default bearer или отдельный APN | 6/8 или vendor mapping | обычно нет | выше default | Более высокий scheduler weight при congestion. |
-| Gold service | dedicated bearer | 3/6/8/custom | опционально | выше | Отдельная QoS-обработка сервиса. |
+| Gold internet | default bearer или отдельный APN | 8 или vendor non-GBR mapping | обычно нет | выше default | Более высокий scheduler weight при congestion. |
+| Gold service | dedicated bearer | GBR QCI для SLA или 8/vendor non-GBR | опционально | выше | Отдельная QoS-обработка сервиса. |
 | VoLTE | dedicated bearer | 1 + 5 | да для RTP | высокий | Защищенный голос, выше gold data. |
 
 ## 5G-реализация

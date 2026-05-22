@@ -41,7 +41,8 @@ RRM --> SCH : load and interference state
 
 note bottom of SCH
 При перегрузке:
-1) GBR bearers получают минимальный bitrate.
+1) GBR bearers удерживают minimum bitrate после admission,
+   если radio capacity достаточна.
 2) Пакеты с риском нарушения delay budget идут раньше.
 3) Best effort снижает throughput первым.
 end note

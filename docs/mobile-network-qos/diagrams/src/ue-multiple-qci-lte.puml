@@ -12,12 +12,12 @@ node "UE protocol stack" as UESTACK {
   queue "Default EPS bearer\nQCI 9\ninternet data" as B9
   queue "Dedicated EPS bearer\nQCI 5\nIMS signaling" as B5
   queue "Dedicated EPS bearer\nQCI 1\nVoLTE RTP, GBR" as B1
-  queue "Optional premium bearer\nQCI 6/8\noperator policy" as B8
+  queue "Optional premium bearer\nQCI 8/vendor\noperator policy" as B8
 }
 node "eNodeB RAN" as ENB {
   rectangle "E-RAB context\none EPS bearer -> one E-RAB" as ERAB
   rectangle "DRB queues\nradio bearers" as DRB
-  rectangle "MAC scheduler\nQCI/GBR/ARP/CQI" as SCH
+  rectangle "MAC scheduler\nQCI/GBR/CQI/weight" as SCH
 }
 node "EPC" as EPC {
   rectangle "P-GW/PCEF\nDL TFT/SDF classifier" as PGW
