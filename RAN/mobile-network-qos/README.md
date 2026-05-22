@@ -87,5 +87,5 @@ subscription/group policy
 Если нужно перерендерить:
 
 ```bash
-java -jar /path/to/plantuml.jar -tsvg docs/mobile-network-qos/diagrams/src/*.puml -o ../rendered
+java -jar /path/to/plantuml.jar -tsvg RAN/mobile-network-qos/diagrams/src/*.puml -o ../rendered
 ```
