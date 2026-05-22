@@ -1,0 +1,53 @@
+@startuml 5g-radio-private
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title 5G NR Radio/RAN: детальная slice-aware QoS-механика
+
+database "Policy context\nS-NSSAI, 5QI, ARP,\nGFBR/MFBR, priority" as POL
+rectangle "gNB-CU-CP\nRRC/RRM" as CUCP {
+  rectangle "Admission Control\nper slice / QoS Flow" as ADM
+  rectangle "Mobility Control\nHO, load balancing" as MOB
+}
+rectangle "gNB-CU-UP" as CUUP {
+  rectangle "SDAP\nQFI -> DRB mapping" as SDAP
+  queue "DRB: 5QI 1\nVoNR voice, GBR" as VONR
+  queue "DRB: 5QI 5\nIMS signaling" as IMS
+  queue "DRB: 5QI 9\neMBB best effort" as EMB
+  queue "DRB: enterprise 5QI\ncritical app" as ENT
+}
+rectangle "gNB-DU MAC" as DU {
+  rectangle "Slice-aware scheduler\nmin/max resource share" as SCH
+  rectangle "Configured Grant\nlow-latency UL option" as CG
+  rectangle "HARQ + link adaptation" as HARQ
+}
+rectangle "RU / Antenna" as RU {
+  rectangle "Beam management\nSSB/CSI-RS, tracking" as BEAM
+  rectangle "Massive MIMO / PRB" as MIMO
+}
+cloud "NR radio" as AIR
+
+POL --> ADM
+ADM --> SDAP
+MOB --> SCH
+SDAP --> VONR
+SDAP --> IMS
+SDAP --> EMB
+SDAP --> ENT
+VONR --> SCH
+IMS --> SCH
+EMB --> SCH
+ENT --> SCH
+CG --> SCH
+HARQ --> SCH
+SCH --> BEAM
+BEAM --> MIMO
+MIMO --> AIR
+
+note bottom of SCH
+Для группы пользователей качество повышают через slice quota,
+GBR QoS Flow, отдельный DRB, высокий 5QI priority,
+admission control и ограничение best-effort eMBB.
+end note
+@enduml

@@ -1,0 +1,36 @@
+@startuml lte-packet-private
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title LTE Packet Core/EPC: детальный поток политики PCC
+
+actor "Application / IMS AF" as AF
+actor "OSS/BSS\nprovisioning" as OSS
+database "HSS\nIMSI, APN list,\nsubscribed QCI/AMBR" as HSS
+database "PCRF policy DB\nPCC rules,\nsubscriber tiers,\nservice policies" as PDB
+rectangle "PCRF\nPolicy and Charging\nRules Function" as PCRF
+rectangle "P-GW / PCEF\nPolicy and Charging\nEnforcement Function" as PCEF
+rectangle "MME\nEPS bearer control" as MME
+rectangle "eNodeB\nRAN admission + scheduler" as ENB
+cloud "User traffic\nIMS / Internet / Corporate" as TRAF
+
+OSS --> HSS : subscriber/APN profile
+OSS --> PDB : tariff, group policy,\nQoS templates
+AF --> PCRF : Rx request\nservice QoS
+HSS --> MME : subscription during attach
+PDB --> PCRF
+PCRF --> PCEF : Gx PCC rule\nTFT/SDF + QCI/ARP/GBR/MBR
+PCEF --> MME : bearer create/modify
+MME --> ENB : E-RAB setup\nQCI/ARP/GBR
+TRAF --> PCEF : IP packets
+PCEF --> TRAF : shaping/gating/charging
+ENB --> TRAF : radio scheduling\nbased on bearer QoS
+
+note bottom
+Групповое качество задается в OSS/BSS и PCRF:
+например "premium data", "enterprise APN",
+"VoLTE", "public safety". P-GW применяет IP policy,
+eNodeB превращает ее в радио-приоритет.
+end note
+@enduml

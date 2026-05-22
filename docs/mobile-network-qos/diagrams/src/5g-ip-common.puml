@@ -1,0 +1,40 @@
+@startuml 5g-ip-common
+!pragma layout smetana
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName DejaVu Sans
+title 5G IP после UPF: общая схема N6 breakout
+
+rectangle "UPF\nPSA / ULCL / BP" as UPF
+rectangle "N6 edge" as EDGE {
+  rectangle "CGNAT" as CGNAT
+  rectangle "Firewall / CG-Security" as FW
+  rectangle "DPI / QoS optimizer" as DPI
+}
+rectangle "IP/MPLS / SR network" as CORE {
+  queue "Low latency queue" as LLQ
+  queue "Assured forwarding" as AF
+  queue "Best effort" as BE
+}
+cloud "MEC / local application" as MEC
+cloud "IMS" as IMS
+cloud "Internet / CDN / Peering" as NET
+cloud "Enterprise private network" as ENT
+database "OSS/NMS/SDN controller\nrouting, QoS, ACL, UPF selection" as OSS
+
+UPF --> EDGE : N6
+EDGE --> CORE
+UPF --> MEC : local breakout
+CORE --> IMS
+CORE --> NET
+CORE --> ENT
+OSS --> UPF : DNN route,\nUPF placement
+OSS --> EDGE : security/DPI policy
+OSS --> CORE : DSCP/SR/MPLS queues
+
+note right of UPF
+UPF может быть центральным,
+региональным или edge. Placement
+сильно влияет на latency.
+end note
+@enduml
