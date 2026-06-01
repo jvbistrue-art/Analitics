@@ -2,6 +2,7 @@ import json
 import unittest
 
 from tools.patent_clearance_open.server import (
+    build_official_patent_number_links,
     build_patent_clearance_search_plan,
     evaluate_patent_clearance_candidates,
     handle_request,
@@ -10,6 +11,25 @@ from tools.patent_clearance_open.server import (
 
 
 class PatentClearanceOpenTests(unittest.TestCase):
+    def test_direct_fips_links_for_known_patent_numbers(self):
+        result = build_official_patent_number_links({"patent_numbers": ["RU2838158C1", "2838158"]})
+
+        self.assertEqual(result["lookups"][0]["normalized_number"], "2838158")
+        self.assertIn("DocNumber=2838158", result["lookups"][0]["official_links"][0]["url"])
+        self.assertIn("docid=2838158", result["lookups"][0]["official_links"][1]["url"])
+
+    def test_search_plan_includes_known_number_lookup_links(self):
+        result = build_patent_clearance_search_plan(
+            {
+                "product_name": "Known patent check",
+                "technical_features": ["маршрутизация трафика"],
+                "known_patent_numbers": ["2838158"],
+            }
+        )
+
+        self.assertEqual(result["known_patent_numbers"], ["2838158"])
+        self.assertEqual(result["number_lookup_links"][0]["normalized_number"], "2838158")
+
     def test_policy_blocks_paid_sources(self):
         result = validate_open_sources_policy(["FIPS", "Derwent Innovation", "Questel Orbit"])
 

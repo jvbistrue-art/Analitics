@@ -33,9 +33,10 @@ Not allowed unless the user explicitly changes the scope:
 If the `patent-clearance-open` MCP server is available, use:
 
 1. `validate_open_sources_policy` before accepting a source list.
-2. `build_patent_clearance_search_plan` after the product features and search terms are known.
-3. `evaluate_patent_clearance_candidates` after collecting candidate RU/EA documents from open sources.
-4. `generate_open_fto_report` for a structured markdown report scaffold.
+2. `build_official_patent_number_links` whenever the user provides a known RU patent/application number; direct FIPS lookup is mandatory because fresh documents may not be indexed by web search.
+3. `build_patent_clearance_search_plan` after the product features and search terms are known.
+4. `evaluate_patent_clearance_candidates` after collecting candidate RU/EA documents from open sources.
+5. `generate_open_fto_report` for a structured markdown report scaffold.
 
 ## Workflow
 
@@ -58,6 +59,7 @@ If the `patent-clearance-open` MCP server is available, use:
    - Include IPC/CPC codes and known patent numbers where available.
 
 4. Search open sources.
+   - If any patent/application number is known, first open direct FIPS links by number (`DocNumber=...` / `docid=...`) and record official status.
    - Search FIPS and Rospatent first for RU documents.
    - Search EAPO for EA documents and status in Russia.
    - Use Espacenet, PATENTSCOPE, Google Patents, and Lens to expand patent families, identify classifications, and find foreign equivalents.

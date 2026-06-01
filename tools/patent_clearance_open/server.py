@@ -145,6 +145,71 @@ def source_to_dict(source: OpenSource) -> dict[str, Any]:
     }
 
 
+def normalize_patent_number(number: str) -> str:
+    normalized = "".join(ch for ch in str(number).upper() if ch.isalnum())
+    if normalized.startswith("RU"):
+        normalized = normalized[2:]
+    for suffix in ("C1", "C2", "U1", "A1", "A2"):
+        if normalized.endswith(suffix):
+            normalized = normalized[: -len(suffix)]
+            break
+    return normalized
+
+
+def build_official_patent_number_links(arguments: dict[str, Any]) -> dict[str, Any]:
+    """Generate direct open-register lookup links for known patent numbers.
+
+    Search engines may not index fresh FIPS documents. Direct number lookup in
+    official registers is therefore mandatory when a patent/application number is
+    known.
+    """
+
+    patent_numbers = compact_list(arguments.get("patent_numbers"))
+    lookups = []
+    for raw_number in patent_numbers:
+        number = normalize_patent_number(raw_number)
+        if not number:
+            continue
+        lookups.append(
+            {
+                "input": raw_number,
+                "normalized_number": number,
+                "jurisdiction_hint": "RU",
+                "official_links": [
+                    {
+                        "name": "FIPS RUPAT direct HTML",
+                        "url": f"https://www1.fips.ru/fips_servl/fips_servlet?DB=RUPAT&DocNumber={number}&TypeFile=html",
+                    },
+                    {
+                        "name": "FIPS CDFI direct HTML",
+                        "url": f"https://www.fips.ru/cdfi/fips.dll/ru?docid={number}&ty=29",
+                    },
+                    {
+                        "name": "FIPS open registers entry point",
+                        "url": "https://www1.fips.ru/registers-web/",
+                    },
+                ],
+                "discovery_links": [
+                    {
+                        "name": "Google Patents RU C1 guess",
+                        "url": f"https://patents.google.com/patent/RU{number}C1/ru",
+                    },
+                    {
+                        "name": "Google Patents RU C2 guess",
+                        "url": f"https://patents.google.com/patent/RU{number}C2/ru",
+                    },
+                ],
+                "required_action": "Open at least one official FIPS link and record title, owner, claims, and legal status.",
+            }
+        )
+
+    return {
+        "lookups": lookups,
+        "policy": "Known RU patent/application numbers must be checked by direct official FIPS lookup, not only by keyword search.",
+        "disclaimer": DISCLAIMER,
+    }
+
+
 def validate_open_sources_policy(sources: list[str] | None = None) -> dict[str, Any]:
     """Check a proposed source list against the open-source-only policy."""
 
@@ -193,6 +258,7 @@ def build_patent_clearance_search_plan(arguments: dict[str, Any]) -> dict[str, A
     keywords_en = compact_list(arguments.get("keywords_en"))
     ipc_codes = compact_list(arguments.get("ipc_codes"))
     assignees = compact_list(arguments.get("assignees"))
+    known_patent_numbers = compact_list(arguments.get("known_patent_numbers"))
 
     ru_terms = keywords_ru + technical_features
     en_terms = keywords_en
@@ -254,6 +320,8 @@ def build_patent_clearance_search_plan(arguments: dict[str, Any]) -> dict[str, A
         f"- {DISCLAIMER}",
     ]
 
+    number_lookup_links = build_official_patent_number_links({"patent_numbers": known_patent_numbers}) if known_patent_numbers else {"lookups": []}
+
     return {
         "product_name": product_name,
         "product_description": description,
@@ -262,6 +330,8 @@ def build_patent_clearance_search_plan(arguments: dict[str, Any]) -> dict[str, A
         "keywords_en": keywords_en,
         "ipc_codes": ipc_codes,
         "assignees": assignees,
+        "known_patent_numbers": known_patent_numbers,
+        "number_lookup_links": number_lookup_links["lookups"],
         "jurisdiction_filters": jurisdiction_filters,
         "queries": {"ru": ru_query, "en_or_global": en_query},
         "source_searches": source_searches,
@@ -448,6 +518,14 @@ def generate_open_fto_report(arguments: dict[str, Any]) -> dict[str, Any]:
 
 
 TOOLS: dict[str, dict[str, Any]] = {
+    "build_official_patent_number_links": {
+        "description": "Generate direct official FIPS lookup links for known RU patent/application numbers.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"patent_numbers": {"type": "array", "items": {"type": "string"}}},
+        },
+        "handler": build_official_patent_number_links,
+    },
     "validate_open_sources_policy": {
         "description": "Validate that proposed patent research sources comply with the open-sources-only policy.",
         "inputSchema": {
@@ -468,6 +546,7 @@ TOOLS: dict[str, dict[str, Any]] = {
                 "keywords_en": {"type": "array", "items": {"type": "string"}},
                 "ipc_codes": {"type": "array", "items": {"type": "string"}},
                 "assignees": {"type": "array", "items": {"type": "string"}},
+                "known_patent_numbers": {"type": "array", "items": {"type": "string"}},
             },
         },
         "handler": build_patent_clearance_search_plan,
@@ -511,6 +590,7 @@ TOOLS: dict[str, dict[str, Any]] = {
                 "keywords_en": {"type": "array", "items": {"type": "string"}},
                 "ipc_codes": {"type": "array", "items": {"type": "string"}},
                 "assignees": {"type": "array", "items": {"type": "string"}},
+                "known_patent_numbers": {"type": "array", "items": {"type": "string"}},
                 "candidate_documents": {"type": "array", "items": {"type": "object"}},
             },
         },
