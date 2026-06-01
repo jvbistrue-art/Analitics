@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "patent-clearance-open": {
+      "command": "python3",
+      "args": [
+        "./tools/patent_clearance_open/server.py"
+      ]
+    }
+  }
+}
