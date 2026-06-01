@@ -58,6 +58,28 @@ class PatentClearanceOpenTests(unittest.TestCase):
         self.assertEqual(result["risk_register"][0]["risk"], "high")
         self.assertEqual(result["risk_register"][1]["risk"], "low_verify")
 
+    def test_foreign_documents_require_ru_ea_family_check(self):
+        result = evaluate_patent_clearance_candidates(
+            {
+                "product_features": ["A", "B"],
+                "candidate_documents": [
+                    {
+                        "number": "US123",
+                        "title": "Foreign active example",
+                        "jurisdiction": "US",
+                        "legal_status": "active",
+                        "matched_features": ["A", "B"],
+                        "independent_claim": "1. A system comprising A and B.",
+                        "source_urls": ["https://patents.google.com/patent/US123/en"],
+                    }
+                ],
+            }
+        )
+
+        item = result["risk_register"][0]
+        self.assertEqual(item["risk"], "family_check")
+        self.assertIn("RU/EA family status", item["missing_evidence"])
+
     def test_mcp_tools_list(self):
         response = handle_request({"jsonrpc": "2.0", "id": 1, "method": "tools/list"})
 

@@ -122,7 +122,8 @@ This is a preliminary research aid, not a legal opinion.
 
 - `high`: official status active or potentially active, and claim-feature mapping suggests most/all claim limitations are present.
 - `medium`: active or potentially active, but mapping is partial or uncertain.
-- `monitor`: pending application or published application with relevant overlap.
+- `monitor`: pending RU/EA application or published application with relevant overlap.
+- `family_check`: technically relevant foreign document; check whether an RU/EA family member exists and is in force.
 - `unknown`: status or claim evidence is missing.
 - `low_verify`: appears expired/lapsed/inactive, but official status, reinstatement, extension, or related rights still need verification.
 - `low`: no meaningful claim-feature overlap found.

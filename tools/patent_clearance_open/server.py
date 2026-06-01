@@ -312,6 +312,16 @@ def score_candidate(product_features: list[str], candidate: dict[str, Any]) -> d
     matched_features = compact_list(candidate.get("matched_features"))
     status = str(candidate.get("legal_status", "")).strip()
     status_class = classify_status(status)
+    jurisdiction = str(candidate.get("jurisdiction", "")).strip()
+    jurisdiction_normalized = jurisdiction.casefold().replace(" ", "")
+    is_russia_scope = jurisdiction_normalized in {
+        "ru",
+        "russia",
+        "russianfederation",
+        "ea",
+        "eapo",
+        "eurasian",
+    }
     feature_count = max(len(product_features), 1)
     coverage = len(matched_features) / feature_count
 
@@ -323,7 +333,15 @@ def score_candidate(product_features: list[str], candidate: dict[str, Any]) -> d
     if not candidate.get("independent_claim"):
         missing.append("independent claim text")
 
-    if status_class == "active_or_potentially_active" and coverage >= 0.8:
+    if jurisdiction_normalized and not is_russia_scope and coverage > 0:
+        risk = "family_check"
+        rationale = (
+            "Technically relevant foreign document; it is not a Russia blocking right unless an RU/EA "
+            "family member exists and is in force."
+        )
+        if "RU/EA family status" not in missing:
+            missing.append("RU/EA family status")
+    elif status_class == "active_or_potentially_active" and coverage >= 0.8:
         risk = "high"
         rationale = "Active/potentially active right and most product features are mapped."
     elif status_class == "active_or_potentially_active" and coverage >= 0.5:
@@ -345,7 +363,7 @@ def score_candidate(product_features: list[str], candidate: dict[str, Any]) -> d
     return {
         "number": candidate.get("number", ""),
         "title": candidate.get("title", ""),
-        "jurisdiction": candidate.get("jurisdiction", ""),
+        "jurisdiction": jurisdiction,
         "kind": candidate.get("kind", ""),
         "legal_status": status,
         "status_class": status_class,
@@ -366,7 +384,7 @@ def evaluate_patent_clearance_candidates(arguments: dict[str, Any]) -> dict[str,
         candidates = []
 
     scored = [score_candidate(product_features, candidate) for candidate in candidates if isinstance(candidate, dict)]
-    risk_order = {"high": 0, "medium": 1, "monitor": 2, "unknown": 3, "low_verify": 4, "low": 5}
+    risk_order = {"high": 0, "medium": 1, "monitor": 2, "family_check": 3, "unknown": 4, "low_verify": 5, "low": 6}
     scored.sort(key=lambda item: risk_order.get(item["risk"], 99))
 
     lines = [
