@@ -34,9 +34,10 @@ If the `patent-clearance-open` MCP server is available, use:
 
 1. `validate_open_sources_policy` before accepting a source list.
 2. `build_official_patent_number_links` whenever the user provides a known RU patent/application number; direct FIPS lookup is mandatory because fresh documents may not be indexed by web search.
-3. `build_patent_clearance_search_plan` after the product features and search terms are known.
-4. `evaluate_patent_clearance_candidates` after collecting candidate RU/EA documents from open sources.
-5. `generate_open_fto_report` for a structured markdown report scaffold.
+3. `build_parallel_open_search_workflow` when starting a new search; it returns both official FIPS/EAPO tasks and web-discovery tasks from the same inputs.
+4. `build_patent_clearance_search_plan` after the product features and search terms are known.
+5. `evaluate_patent_clearance_candidates` after collecting candidate RU/EA documents from open sources.
+6. `generate_open_fto_report` for a structured markdown report scaffold.
 
 ## Workflow
 
@@ -58,11 +59,13 @@ If the `patent-clearance-open` MCP server is available, use:
    - Include synonyms, functional terms, material/process terms, and competitor names.
    - Include IPC/CPC codes and known patent numbers where available.
 
-4. Search open sources.
+4. Search open sources in parallel.
    - If any patent/application number is known, first open direct FIPS links by number (`DocNumber=...` / `docid=...`) and record official status.
-   - Search FIPS and Rospatent first for RU documents.
+   - Run FIPS/Rospatent/EAPO official checks and web discovery at the same time from the same feature set.
+   - Search FIPS and Rospatent for RU documents.
    - Search EAPO for EA documents and status in Russia.
    - Use Espacenet, PATENTSCOPE, Google Patents, and Lens to expand patent families, identify classifications, and find foreign equivalents.
+   - Merge all web-discovered RU/EA numbers back into official FIPS/EAPO status checks.
    - Keep the source URL and search query for every material result.
 
 5. Verify legal status in official registers.

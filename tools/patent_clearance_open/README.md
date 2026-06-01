@@ -12,6 +12,8 @@ authenticated APIs.
   includes blocked paid/closed databases.
 - `build_official_patent_number_links` - generates direct FIPS lookup links for
   known RU patent/application numbers, avoiding misses from unindexed fresh documents.
+- `build_parallel_open_search_workflow` - creates one parallel workflow with
+  official FIPS/EAPO tasks and web-discovery tasks from the same inputs.
 - `build_patent_clearance_search_plan` - creates a Russia-focused search plan,
   source links, suggested queries, and a report outline.
 - `evaluate_patent_clearance_candidates` - turns manually collected candidate

@@ -3,6 +3,7 @@ import unittest
 
 from tools.patent_clearance_open.server import (
     build_official_patent_number_links,
+    build_parallel_open_search_workflow,
     build_patent_clearance_search_plan,
     evaluate_patent_clearance_candidates,
     handle_request,
@@ -29,6 +30,32 @@ class PatentClearanceOpenTests(unittest.TestCase):
 
         self.assertEqual(result["known_patent_numbers"], ["2838158"])
         self.assertEqual(result["number_lookup_links"][0]["normalized_number"], "2838158")
+
+    def test_parallel_open_search_workflow_combines_fips_and_web(self):
+        result = build_parallel_open_search_workflow(
+            {
+                "product_name": "Operator VPN",
+                "technical_features": ["маршрутизация трафика абонента", "VPN туннель"],
+                "keywords_en": ["mobile operator VPN routing"],
+                "ipc_codes": ["H04W"],
+                "known_patent_numbers": ["RU2838158C1"],
+            }
+        )
+
+        official_tasks = result["run_in_parallel"]["official_register_tasks"]
+        web_tasks = result["run_in_parallel"]["web_discovery_tasks"]
+
+        self.assertEqual(official_tasks[0]["task"], "direct_fips_number_lookup")
+        self.assertIn("DocNumber=2838158", official_tasks[0]["lookups"][0]["official_links"][0]["url"])
+        self.assertTrue(any(task["task"] == "fips_keyword_search" for task in official_tasks))
+        self.assertTrue(any(task["task"] == "google_patents_discovery" for task in web_tasks))
+        self.assertIn("H04W", result["queries"]["ru"])
+
+    def test_mcp_tools_list_includes_parallel_workflow(self):
+        response = handle_request({"jsonrpc": "2.0", "id": 10, "method": "tools/list"})
+
+        tool_names = {tool["name"] for tool in response["result"]["tools"]}
+        self.assertIn("build_parallel_open_search_workflow", tool_names)
 
     def test_policy_blocks_paid_sources(self):
         result = validate_open_sources_policy(["FIPS", "Derwent Innovation", "Questel Orbit"])

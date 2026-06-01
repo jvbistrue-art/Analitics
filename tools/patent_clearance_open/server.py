@@ -210,6 +210,122 @@ def build_official_patent_number_links(arguments: dict[str, Any]) -> dict[str, A
     }
 
 
+def build_parallel_open_search_workflow(arguments: dict[str, Any]) -> dict[str, Any]:
+    """Build a parallel official-register and web-discovery search workflow.
+
+    Official sources and web sources should be queried from the same feature set.
+    Web discovery is useful for finding terminology and families, while FIPS/EAPO
+    remain mandatory for Russia legal status.
+    """
+
+    product_name = str(arguments.get("product_name", "")).strip() or "Unnamed product"
+    technical_features = compact_list(arguments.get("technical_features"))
+    keywords_ru = compact_list(arguments.get("keywords_ru"))
+    keywords_en = compact_list(arguments.get("keywords_en"))
+    ipc_codes = compact_list(arguments.get("ipc_codes"))
+    assignees = compact_list(arguments.get("assignees"))
+    known_patent_numbers = compact_list(arguments.get("known_patent_numbers"))
+
+    ru_terms = keywords_ru + technical_features
+    en_terms = keywords_en or technical_features
+    ru_query = make_boolean_query(ru_terms, ipc_codes)
+    en_query = make_boolean_query(en_terms, ipc_codes)
+    assignee_query = make_boolean_query(assignees) if assignees else ""
+
+    direct_number_lookup = build_official_patent_number_links({"patent_numbers": known_patent_numbers})
+
+    official_tasks = []
+    if direct_number_lookup["lookups"]:
+        official_tasks.append(
+            {
+                "task": "direct_fips_number_lookup",
+                "purpose": "Verify known RU patent/application numbers in official FIPS pages before keyword analysis.",
+                "lookups": direct_number_lookup["lookups"],
+            }
+        )
+
+    official_tasks.extend(
+        [
+            {
+                "task": "fips_keyword_search",
+                "source": source_to_dict(OPEN_SOURCES[0]),
+                "suggested_query": ru_query,
+                "url": OPEN_SOURCES[0].url,
+                "capture": ["publication number", "title", "owner", "claims", "legal status", "official URL"],
+            },
+            {
+                "task": "fips_open_register_status_check",
+                "source": source_to_dict(OPEN_SOURCES[1]),
+                "suggested_query": "Use patent/application numbers collected from all search branches.",
+                "url": OPEN_SOURCES[1].url,
+                "capture": ["current status", "maintenance fees", "last status change", "application number"],
+            },
+            {
+                "task": "rospatent_platform_semantic_search",
+                "source": source_to_dict(OPEN_SOURCES[2]),
+                "suggested_query": ru_query,
+                "url": OPEN_SOURCES[2].url,
+                "capture": ["RU candidates", "classifications", "similar documents"],
+            },
+            {
+                "task": "eapo_register_search",
+                "source": source_to_dict(OPEN_SOURCES[3]),
+                "suggested_query": ru_query,
+                "url": OPEN_SOURCES[3].url,
+                "capture": ["EA candidates", "validity in Russia", "maintenance country table"],
+            },
+        ]
+    )
+
+    web_queries = [query for query in [ru_query, en_query, assignee_query] if query]
+    web_tasks = []
+    for query in web_queries:
+        web_tasks.extend(
+            [
+                {
+                    "task": "google_patents_discovery",
+                    "source": source_to_dict(next(source for source in OPEN_SOURCES if source.key == "google_patents")),
+                    "query": query,
+                    "url": next(source for source in OPEN_SOURCES if source.key == "google_patents").search_url(query),
+                    "capture": ["family members", "citations", "machine translation", "publication numbers"],
+                },
+                {
+                    "task": "espacenet_family_discovery",
+                    "source": source_to_dict(next(source for source in OPEN_SOURCES if source.key == "espacenet")),
+                    "query": query,
+                    "url": next(source for source in OPEN_SOURCES if source.key == "espacenet").search_url(query),
+                    "capture": ["patent family", "IPC/CPC", "RU/EA family hints"],
+                },
+                {
+                    "task": "lens_discovery",
+                    "source": source_to_dict(next(source for source in OPEN_SOURCES if source.key == "lens")),
+                    "query": query,
+                    "url": next(source for source in OPEN_SOURCES if source.key == "lens").search_url(query),
+                    "capture": ["family", "calculated legal status hints", "publication numbers"],
+                },
+            ]
+        )
+
+    convergence_steps = [
+        "Merge publication numbers found by web discovery into FIPS/EAPO official status checks.",
+        "Treat Google/Lens/Espacenet legal status as hints only; cite FIPS/EAPO for RU/EA conclusions.",
+        "Score only RU/EA active or potentially active documents as direct Russia blocking risks.",
+        "Mark foreign-only documents as family_check until an RU/EA family member is found and verified.",
+    ]
+
+    return {
+        "product_name": product_name,
+        "queries": {"ru": ru_query, "en_or_global": en_query, "assignees": assignee_query},
+        "run_in_parallel": {
+            "official_register_tasks": official_tasks,
+            "web_discovery_tasks": web_tasks,
+        },
+        "convergence_steps": convergence_steps,
+        "policy": "Run web discovery and official FIPS/EAPO checks in parallel, but base Russia FTO conclusions on official RU/EA legal-status evidence.",
+        "disclaimer": DISCLAIMER,
+    }
+
+
 def validate_open_sources_policy(sources: list[str] | None = None) -> dict[str, Any]:
     """Check a proposed source list against the open-source-only policy."""
 
@@ -533,6 +649,22 @@ TOOLS: dict[str, dict[str, Any]] = {
             "properties": {"sources": {"type": "array", "items": {"type": "string"}}},
         },
         "handler": validate_open_sources_policy,
+    },
+    "build_parallel_open_search_workflow": {
+        "description": "Build a parallel FIPS/EAPO official-register and web-discovery search workflow for Russia FTO.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "product_name": {"type": "string"},
+                "technical_features": {"type": "array", "items": {"type": "string"}},
+                "keywords_ru": {"type": "array", "items": {"type": "string"}},
+                "keywords_en": {"type": "array", "items": {"type": "string"}},
+                "ipc_codes": {"type": "array", "items": {"type": "string"}},
+                "assignees": {"type": "array", "items": {"type": "string"}},
+                "known_patent_numbers": {"type": "array", "items": {"type": "string"}},
+            },
+        },
+        "handler": build_parallel_open_search_workflow,
     },
     "build_patent_clearance_search_plan": {
         "description": "Build an open-source Russia patent-clearance search plan with source links and report outline.",
