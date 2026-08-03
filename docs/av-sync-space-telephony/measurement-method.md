@@ -31,7 +31,7 @@ AV_offset_ms = t_beep_playout - t_flash_playout
 | Амплитуда | высокая, без клиппинга | против NS/AGC |
 | Длина ролика | 60–180 s | 20–50 маркеров на статистику |
 
-Генератор: `python -m tools.av_sync_measure.generate_stimulus`.
+Генератор: `python3 -m tools.av_sync_measure generate`.
 
 ## 4. Как гонять
 
@@ -56,12 +56,11 @@ AV_offset_ms = t_beep_playout - t_flash_playout
 ## 5. Автоматический разбор записи
 
 ```bash
-python -m tools.av_sync_measure.measure \
+python3 -m tools.av_sync_measure measure \
   --input receiver_capture.mkv \
   --bias-ms 18 \
   --report report.json
 ```
-
 Алгоритм инструмента:
 
 1. Достаёт аудио (ffmpeg → PCM WAV 48 kHz mono).

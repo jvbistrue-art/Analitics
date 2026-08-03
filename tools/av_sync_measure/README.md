@@ -15,7 +15,7 @@
 ### 1. Сгенерировать стимул
 
 ```bash
-python -m tools.av_sync_measure generate \
+python3 -m tools.av_sync_measure generate \
   --output /tmp/stimulus.mp4 \
   --duration 30 \
   --period 4 \
@@ -35,7 +35,7 @@ python -m tools.av_sync_measure generate \
 ### 3. Измерить offset
 
 ```bash
-python -m tools.av_sync_measure measure \
+python3 -m tools.av_sync_measure measure \
   --input /tmp/stimulus_audio_delay_500ms.mp4 \
   --bias-ms 0 \
   --threshold-profile baseline \
