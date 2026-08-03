@@ -2,7 +2,8 @@
 
 Инструмент для измерения рассинхрона голоса и видео по маркерам **flash + beep**.
 
-Методика: [docs/av-sync-space-telephony](../../docs/av-sync-space-telephony/README.md).
+Методика для split-path **видео по data + голос по классической LTE-телефонии (VoLTE)**:
+[docs/av-sync-lte-telephony](../../docs/av-sync-lte-telephony/README.md).
 
 ## Зависимости
 
@@ -19,35 +20,32 @@ python3 -m tools.av_sync_measure generate \
   --output /tmp/stimulus.mp4 \
   --duration 30 \
   --period 4 \
-  --also-delayed 500
+  --also-delayed 250
 ```
 
 Получите:
 
 - `/tmp/stimulus.mp4` — синхронные вспышки и бипы;
-- `/tmp/stimulus_audio_delay_500ms.mp4` — имитация «голос через спутник» (аудио +500 ms).
+- `/tmp/stimulus_audio_delay_250ms.mp4` — имитация более медленного голосового пути (например VoLTE-like +250 ms).
 
 ### 2. Прогнать стимул через ваш звонок
 
-- A: играет стимул в камеру/микрофон (или virtual cam/mic).
-- B: пишет экран + системный звук → `receiver_capture.mkv`.
+- A: стимул в камеру + в микрофон **телефонного** (VoLTE) канала.
+- B: экран видеозвонка + звук telephony/speaker → `receiver_capture.mkv`.
+- Подтвердить, что голос идёт по VoLTE, а не Wi‑Fi Calling / CSFB.
 
 ### 3. Измерить offset
 
 ```bash
 python3 -m tools.av_sync_measure measure \
-  --input /tmp/stimulus_audio_delay_500ms.mp4 \
+  --input /tmp/stimulus_audio_delay_250ms.mp4 \
   --bias-ms 0 \
+  --search-window-ms 1000 \
   --threshold-profile baseline \
   --report /tmp/report.json
 ```
 
-В отчёте смотрите:
-
-- `median_offset_ms` — основной показатель (`>0` => голос позже видео);
-- `std_offset_ms` — стабильность;
-- `match_rate` — качество детекции маркеров;
-- `verdict` — по выбранному профилю порогов.
+Смотрите `median_offset_ms` (`>0` => голос позже видео), `std_offset_ms`, `match_rate`, `verdict`.
 
 ## Профили порогов
 
@@ -55,8 +53,8 @@ python3 -m tools.av_sync_measure measure \
 |---|---|
 | `baseline` | только измерение (`MEASURED_ONLY`) |
 | `itu_like` | комфортный lip-sync (−45…+125 ms, std≤40) |
-| `sat_compensated` | практичный после компенсации (\|median\|≤100, std≤60) |
+| `volte_compensated` | после компенсации (\|median\|≤100, std≤60) |
 
 ## Калибровка recorder bias
 
-Локально проиграйте синхронный стимул и запишите тем же рекордером. Если инструмент показал `+18 ms`, дальше всегда передавайте `--bias-ms 18`.
+Локально проиграйте синхронный стимул тем же рекордером. Если получили `+18 ms`, дальше используйте `--bias-ms 18`.

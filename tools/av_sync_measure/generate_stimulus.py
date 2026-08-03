@@ -166,7 +166,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         type=float,
         default=None,
         metavar="MS",
-        help="also write a copy with audio delayed by MS (simulates sat voice)",
+        help="also write a copy with audio delayed by MS (simulates slower voice path, e.g. VoLTE)",
     )
     return p.parse_args(argv)
 

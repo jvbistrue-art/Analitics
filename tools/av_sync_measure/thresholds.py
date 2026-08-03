@@ -32,8 +32,8 @@ PROFILES: dict[str, ThresholdProfile] = {
         max_std_ms=40.0,
         measured_only=False,
     ),
-    "sat_compensated": ThresholdProfile(
-        name="sat_compensated",
+    "volte_compensated": ThresholdProfile(
+        name="volte_compensated",
         min_median_ms=None,
         max_median_ms=None,
         max_abs_median_ms=100.0,

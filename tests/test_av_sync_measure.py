@@ -49,9 +49,9 @@ class ThresholdTests(unittest.TestCase):
         self.assertEqual(verdict(-60, 10, "itu_like"), "FAIL")
         self.assertEqual(verdict(20, 50, "itu_like"), "FAIL")
 
-    def test_sat_compensated(self):
-        self.assertEqual(verdict(90, 20, "sat_compensated"), "PASS")
-        self.assertEqual(verdict(140, 20, "sat_compensated"), "FAIL")
+    def test_volte_compensated(self):
+        self.assertEqual(verdict(90, 20, "volte_compensated"), "PASS")
+        self.assertEqual(verdict(140, 20, "volte_compensated"), "FAIL")
 
 
 class DetectorTests(unittest.TestCase):
