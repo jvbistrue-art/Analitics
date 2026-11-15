@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package swarm.v1;
+
+// Control-plane API between coordinator and workers.
+// Inference payloads stay on llama.cpp RPC; this proto is membership + scheduling.
+
+message NodeCapabilities {
+  string node_id = 1;
+  string hostname = 2;
+  string platform = 3;          // android | linux
+  string arch = 4;              // arm64 | x86_64
+  uint64 ram_total_bytes = 5;
+  uint64 ram_avail_bytes = 6;
+  uint32 cpu_threads = 7;
+  bool vulkan = 8;
+  bool ethernet = 9;
+  float battery_pct = 10;       // -1 if N/A
+  float temperature_c = 11;     // -1 if unknown
+  string rpc_endpoint = 12;     // host:port for llama.cpp rpc-server
+  uint32 llama_port = 13;       // local OpenAI-compatible port if replica mode
+}
+
+message Heartbeat {
+  string node_id = 1;
+  uint64 ram_avail_bytes = 2;
+  float battery_pct = 3;
+  float temperature_c = 4;
+  string state = 5;             // idle | busy | draining | offline
+  uint64 ts_unix_ms = 6;
+}
+
+message RegisterRequest {
+  NodeCapabilities caps = 1;
+  string join_token = 2;
+}
+
+message RegisterResponse {
+  bool ok = 1;
+  string coordinator_id = 2;
+  uint32 heartbeat_interval_ms = 3;
+  string assigned_role = 4;     // replica | shard_member | standby
+}
+
+message HeartbeatRequest {
+  Heartbeat hb = 1;
+}
+
+message HeartbeatResponse {
+  bool ok = 1;
+  string desired_state = 2;     // stay | drain | leave
+  optional ShardAssignment shard = 3;
+  optional ReplicaAssignment replica = 4;
+}
+
+message ShardAssignment {
+  string model_id = 1;
+  string gguf_hash = 2;
+  uint32 layer_start = 3;
+  uint32 layer_end = 4;         // exclusive
+  repeated string pipeline_peers = 5;
+}
+
+message ReplicaAssignment {
+  string model_id = 1;
+  string gguf_hash = 2;
+  string download_url = 3;
+}
+
+service SwarmControl {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+}
