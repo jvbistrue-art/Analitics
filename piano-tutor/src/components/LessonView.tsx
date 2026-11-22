@@ -1,5 +1,7 @@
 import catalog from "../data/catalog.json";
+import { getLessonContent } from "../data/lessonsContent";
 import { quizzes } from "../data/quizzes";
+import { LessonText } from "./LessonText";
 import { PracticePad } from "./PracticePad";
 import { QuizPanel } from "./QuizPanel";
 
@@ -34,6 +36,7 @@ export function LessonView({
 }: Props) {
   const mod = catalog.modules.find((m) => m.id === lesson.moduleId);
   const quiz = quizzes[lesson.quizId];
+  const content = getLessonContent(lesson.id);
 
   return (
     <article className="lesson">
@@ -60,6 +63,23 @@ export function LessonView({
         </div>
       </header>
 
+      {content ? <LessonText content={content} /> : null}
+
+      <div className="steps">
+        <div className="step">
+          <strong>1. Прочитайте конспект</strong>
+          <span>Цели, теория и шаги практики выше.</span>
+        </div>
+        <div className="step">
+          <strong>2. Посмотрите видео</strong>
+          <span>Повторяйте руками на своём инструменте.</span>
+        </div>
+        <div className="step">
+          <strong>3. Закрепите</strong>
+          <span>Клавиатура и мини-тест внизу.</span>
+        </div>
+      </div>
+
       <div className="video-frame">
         <iframe
           title={lesson.titleRu}
@@ -77,23 +97,8 @@ export function LessonView({
         >
           {catalog.source.name}
         </a>{" "}
-        · встроено с YouTube (не скачивалось)
+        · встроено с YouTube · конспект по транскрипту урока
       </p>
-
-      <div className="steps">
-        <div className="step">
-          <strong>1. Смотрите</strong>
-          <span>Один раз целиком, не торопясь повторять руками.</span>
-        </div>
-        <div className="step">
-          <strong>2. Повторите на инструменте</strong>
-          <span>Медленно, руки отдельно, затем вместе.</span>
-        </div>
-        <div className="step">
-          <strong>3. Закрепите здесь</strong>
-          <span>Клавиатура + мини-тест ниже.</span>
-        </div>
-      </div>
 
       <PracticePad lessonId={lesson.id} />
 
