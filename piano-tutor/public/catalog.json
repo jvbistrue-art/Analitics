@@ -1,0 +1,662 @@
+{
+  "source": {
+    "name": "Online Piano University — Dr. Maria Pisarenko",
+    "playlist": "https://www.youtube.com/playlist?list=PLmHakdUcQbtSHDPhBQL8DLmiiKe3CsRzM",
+    "coursePage": "https://onlinepianouniversity.com/free-course.html",
+    "note": "Видео встроены с YouTube (не скачиваются локально) — так соблюдаются авторские права автора курса. Этот учебник — интерактивная оболочка: структура, практика, квизы, прогресс.",
+    "order": "от простого к сложному (41 урок Alfred Adult All-in-One Book 1)"
+  },
+  "modules": [
+    {
+      "id": 1,
+      "title": "Старт за инструментом",
+      "fromLesson": 1,
+      "toLesson": 1,
+      "level": 1
+    },
+    {
+      "id": 2,
+      "title": "Ноты и ритм — одна рука",
+      "fromLesson": 2,
+      "toLesson": 5,
+      "level": 2
+    },
+    {
+      "id": 3,
+      "title": "Две руки и интервалы",
+      "fromLesson": 6,
+      "toLesson": 10,
+      "level": 3
+    },
+    {
+      "id": 4,
+      "title": "Аккорды C, G7, F",
+      "fromLesson": 11,
+      "toLesson": 15,
+      "level": 4
+    },
+    {
+      "id": 5,
+      "title": "Новые позиции, диез, педаль",
+      "fromLesson": 16,
+      "toLesson": 22,
+      "level": 5
+    },
+    {
+      "id": 6,
+      "title": "Ритм и штрихи продвинутее",
+      "fromLesson": 23,
+      "toLesson": 30,
+      "level": 6
+    },
+    {
+      "id": 7,
+      "title": "Гаммы и гармония мажора",
+      "fromLesson": 31,
+      "toLesson": 36,
+      "level": 7
+    },
+    {
+      "id": 8,
+      "title": "Минор и большие пьесы",
+      "fromLesson": 37,
+      "toLesson": 41,
+      "level": 8
+    }
+  ],
+  "lessons": [
+    {
+      "id": 1,
+      "moduleId": 1,
+      "youtubeId": "AzU01rYWHK8",
+      "titleEn": "Warm-Up, Posture & Finding the Keys — Adult Beginner Piano Lesson 1",
+      "titleRu": "Посадка, разминка и клавиатура",
+      "summaryRu": "Как сидеть, форма руки, номера пальцев, группы чёрных клавиш и белые ноты A–G.",
+      "durationSec": 1296,
+      "skills": [
+        "посадка",
+        "клавиатура"
+      ],
+      "quizId": "find-keys",
+      "thumb": "/thumbs/01.jpg"
+    },
+    {
+      "id": 2,
+      "moduleId": 2,
+      "youtubeId": "_IeJIvihGh4",
+      "titleEn": "How to Read the Treble Staff — Right-Hand C Position for Adults",
+      "titleRu": "Скрипичный ключ и C-позиция правой",
+      "summaryRu": "Ноты C–G в скрипичном ключе, позиция C правой рукой.",
+      "durationSec": 268,
+      "skills": [
+        "ноты",
+        "правая рука"
+      ],
+      "quizId": "treble-c",
+      "thumb": "/thumbs/02.jpg"
+    },
+    {
+      "id": 3,
+      "moduleId": 2,
+      "youtubeId": "nZL_od8STps",
+      "titleEn": "Quarter & Half Notes on Piano + Ode to Joy — Counting for Adults",
+      "titleRu": "Четверти, половины и Ode to Joy",
+      "summaryRu": "Длительности, такты, счёт. Играем Ode to Joy правой рукой.",
+      "durationSec": 470,
+      "skills": [
+        "ритм",
+        "пьеса"
+      ],
+      "quizId": "ode-joy",
+      "thumb": "/thumbs/03.jpg"
+    },
+    {
+      "id": 4,
+      "moduleId": 2,
+      "youtubeId": "0nU-4Tc0OvM",
+      "titleEn": "The Whole Note on Piano — Hold It for 4 Counts (Adult Beginner)",
+      "titleRu": "Целая нота",
+      "summaryRu": "Счёт на 4, целая нота и песня в басовом ключе.",
+      "durationSec": 274,
+      "skills": [
+        "ритм",
+        "бас"
+      ],
+      "quizId": "whole-note",
+      "thumb": "/thumbs/04.jpg"
+    },
+    {
+      "id": 5,
+      "moduleId": 2,
+      "youtubeId": "4Za7mJlTAK0",
+      "titleEn": "Left-Hand C Position & Bass Clef on Piano — Adult Beginner",
+      "titleRu": "C-позиция левой и басовый ключ",
+      "summaryRu": "Ноты C–G в басовом ключе левой рукой.",
+      "durationSec": 247,
+      "skills": [
+        "бас",
+        "левая рука"
+      ],
+      "quizId": "bass-c",
+      "thumb": "/thumbs/05.jpg"
+    },
+    {
+      "id": 6,
+      "moduleId": 3,
+      "youtubeId": "EXkuely2w9g",
+      "titleEn": "How to Read the Grand Staff — Both Hands Together (Adult Beginner)",
+      "titleRu": "Большой нотный стан — две руки",
+      "summaryRu": "Соединяем ключи, размер 4/4, паузы, обе руки вместе.",
+      "durationSec": 995,
+      "skills": [
+        "две руки",
+        "ноты"
+      ],
+      "quizId": "grand-staff",
+      "thumb": "/thumbs/06.jpg"
+    },
+    {
+      "id": 7,
+      "moduleId": 3,
+      "youtubeId": "Z9h_hCAJ8dM",
+      "titleEn": "Piano Intervals 2nds & 3rds — How to Read Them Instantly",
+      "titleRu": "Интервалы: секунды и терции",
+      "summaryRu": "Мелодические 2 и 3, динамика p / mf / f.",
+      "durationSec": 952,
+      "skills": [
+        "интервалы",
+        "динамика"
+      ],
+      "quizId": "int-23",
+      "thumb": "/thumbs/07.jpg"
+    },
+    {
+      "id": 8,
+      "moduleId": 3,
+      "youtubeId": "-xX9mjULI-A",
+      "titleEn": "Melodic vs Harmonic Intervals — 2nds & 3rds on Piano",
+      "titleRu": "Гармонические секунды и терции",
+      "summaryRu": "Интервалы вместе и пьеса с forte.",
+      "durationSec": 310,
+      "skills": [
+        "интервалы"
+      ],
+      "quizId": "harm-23",
+      "thumb": "/thumbs/08.jpg"
+    },
+    {
+      "id": 9,
+      "moduleId": 3,
+      "youtubeId": "ESVgKonzN6U",
+      "titleEn": "Piano Intervals 4ths & 5ths for Beginners (Melodic)",
+      "titleRu": "Интервалы: кварты и квинты",
+      "summaryRu": "Мелодические 4 и 5 в C-позиции.",
+      "durationSec": 466,
+      "skills": [
+        "интервалы"
+      ],
+      "quizId": "int-45",
+      "thumb": "/thumbs/09.jpg"
+    },
+    {
+      "id": 10,
+      "moduleId": 3,
+      "youtubeId": "jHVFko5D1i0",
+      "titleEn": "Harmonic 4ths & 5ths on Piano + Play Jingle Bells",
+      "titleRu": "Гармонические 4–5 + Jingle Bells",
+      "summaryRu": "Сначала руки отдельно, потом вместе.",
+      "durationSec": 494,
+      "skills": [
+        "пьеса",
+        "интервалы"
+      ],
+      "quizId": "jingle",
+      "thumb": "/thumbs/10.jpg"
+    },
+    {
+      "id": 11,
+      "moduleId": 4,
+      "youtubeId": "sgpLpyMX-bY",
+      "titleEn": "How to Play a C Major Chord on Piano — Your First Chord",
+      "titleRu": "Аккорд C major — первый аккорд",
+      "summaryRu": "Что такое аккорд, C–E–G, динамика.",
+      "durationSec": 697,
+      "skills": [
+        "аккорды"
+      ],
+      "quizId": "chord-c",
+      "thumb": "/thumbs/11.jpg"
+    },
+    {
+      "id": 12,
+      "moduleId": 4,
+      "youtubeId": "5OPWtEztbRQ",
+      "titleEn": "How to Play the G7 Chord on Piano & Move from C — Tied Notes",
+      "titleRu": "Аккорд G7 и лиги-связки",
+      "summaryRu": "G7, переходы C↔G7, связанные ноты.",
+      "durationSec": 1293,
+      "skills": [
+        "аккорды"
+      ],
+      "quizId": "chord-g7",
+      "thumb": "/thumbs/12.jpg"
+    },
+    {
+      "id": 13,
+      "moduleId": 4,
+      "youtubeId": "ifubkbh2K0Y",
+      "titleEn": "3/4 Time Signature on Piano — How to Count Waltz Rhythm",
+      "titleRu": "Размер 3/4 — вальс",
+      "summaryRu": "Счёт на три, пунктирная половинная.",
+      "durationSec": 267,
+      "skills": [
+        "ритм"
+      ],
+      "quizId": "waltz",
+      "thumb": "/thumbs/13.jpg"
+    },
+    {
+      "id": 14,
+      "moduleId": 4,
+      "youtubeId": "Z0ZPh4yemOc",
+      "titleEn": "Tie vs Slur on Piano — How to Tell the Difference & Play Legato",
+      "titleRu": "Лига vs легато (slur)",
+      "summaryRu": "Легато, отличие от связки нот.",
+      "durationSec": 469,
+      "skills": [
+        "штрихи"
+      ],
+      "quizId": "legato",
+      "thumb": "/thumbs/14.jpg"
+    },
+    {
+      "id": 15,
+      "moduleId": 4,
+      "youtubeId": "cc1F6z98u_A",
+      "titleEn": "How to Play the F Major Chord on Piano (+ Pickup Measure)",
+      "titleRu": "Аккорд F + затакт",
+      "summaryRu": "F major, pickup, When the Saints…",
+      "durationSec": 1156,
+      "skills": [
+        "аккорды",
+        "пьеса"
+      ],
+      "quizId": "chord-f",
+      "thumb": "/thumbs/15.jpg"
+    },
+    {
+      "id": 16,
+      "moduleId": 5,
+      "youtubeId": "Zdc9Fz-ywUs",
+      "titleEn": "G Position on Piano & How to Read Intervals in G",
+      "titleRu": "G-позиция",
+      "summaryRu": "Обе руки в G, интервалы в новой позиции.",
+      "durationSec": 846,
+      "skills": [
+        "позиции"
+      ],
+      "quizId": "g-pos",
+      "thumb": "/thumbs/16.jpg"
+    },
+    {
+      "id": 17,
+      "moduleId": 5,
+      "youtubeId": "DnrkGJ8IQA0",
+      "titleEn": "The Sharp Sign on Piano — What It Means & the Black Keys",
+      "titleRu": "Диез ♯",
+      "summaryRu": "Что делает диез, чёрные клавиши.",
+      "durationSec": 511,
+      "skills": [
+        "альтерация"
+      ],
+      "quizId": "sharp",
+      "thumb": "/thumbs/17.jpg"
+    },
+    {
+      "id": 18,
+      "moduleId": 5,
+      "youtubeId": "7hBX4TPSqUs",
+      "titleEn": "The D7 Chord & How to Use the Damper (Sustain) Pedal",
+      "titleRu": "Аккорд D7 и педаль",
+      "summaryRu": "D7 и техника демпферной педали.",
+      "durationSec": 1262,
+      "skills": [
+        "аккорды",
+        "педаль"
+      ],
+      "quizId": "pedal-d7",
+      "thumb": "/thumbs/18.jpg"
+    },
+    {
+      "id": 19,
+      "moduleId": 5,
+      "youtubeId": "U9cI18auDq4",
+      "titleEn": "New C Major Chord Position on Piano — Inversions & the Note E",
+      "titleRu": "Новая позиция C и обращения",
+      "summaryRu": "Обращения аккордов, нота E.",
+      "durationSec": 960,
+      "skills": [
+        "аккорды"
+      ],
+      "quizId": "c-inv",
+      "thumb": "/thumbs/19.jpg"
+    },
+    {
+      "id": 20,
+      "moduleId": 5,
+      "youtubeId": "3FZpHl5RXjc",
+      "titleEn": "Middle C Position on Piano — Where to Put Both Hands",
+      "titleRu": "Middle C Position",
+      "summaryRu": "Руки вокруг до¹.",
+      "durationSec": 266,
+      "skills": [
+        "позиции"
+      ],
+      "quizId": "middle-c",
+      "thumb": "/thumbs/20.jpg"
+    },
+    {
+      "id": 21,
+      "moduleId": 5,
+      "youtubeId": "OjTvSTq52b0",
+      "titleEn": "Crescendo & Diminuendo on Piano — Dynamics for Adult Beginners",
+      "titleRu": "Крещендо и диминуэндо",
+      "summaryRu": "Динамика фразы.",
+      "durationSec": 473,
+      "skills": [
+        "динамика"
+      ],
+      "quizId": "cresc",
+      "thumb": "/thumbs/21.jpg"
+    },
+    {
+      "id": 22,
+      "moduleId": 5,
+      "youtubeId": "ZyqeqSdoiSM",
+      "titleEn": "What Is a Fermata? How to Play It + Happy Birthday on Piano",
+      "titleRu": "Фермата + Happy Birthday",
+      "summaryRu": "Остановка на фермате, знакомая мелодия.",
+      "durationSec": 300,
+      "skills": [
+        "пьеса"
+      ],
+      "quizId": "birthday",
+      "thumb": "/thumbs/22.jpg"
+    },
+    {
+      "id": 23,
+      "moduleId": 6,
+      "youtubeId": "aIZhc7XN-sE",
+      "titleEn": "How to Count Eighth Notes on Piano — 1 and 2 and (Beginner)",
+      "titleRu": "Восьмые ноты",
+      "summaryRu": "Счёт «раз-и, два-и».",
+      "durationSec": 1166,
+      "skills": [
+        "ритм"
+      ],
+      "quizId": "eighths",
+      "thumb": "/thumbs/23.jpg"
+    },
+    {
+      "id": 24,
+      "moduleId": 6,
+      "youtubeId": "U-3qbnTyuO0",
+      "titleEn": "How to Count Dotted Quarter Notes on Piano + Play Alouette",
+      "titleRu": "Пунктирная четверть + Alouette",
+      "summaryRu": "Сложный ритм и педаль.",
+      "durationSec": 799,
+      "skills": [
+        "ритм",
+        "пьеса"
+      ],
+      "quizId": "dotted",
+      "thumb": "/thumbs/24.jpg"
+    },
+    {
+      "id": 25,
+      "moduleId": 6,
+      "youtubeId": "vpw56OQLl2c",
+      "titleEn": "Piano Intervals: 6ths — Melodic & Harmonic for Beginners",
+      "titleRu": "Интервалы: сексты",
+      "summaryRu": "Мелодические и гармонические 6.",
+      "durationSec": 696,
+      "skills": [
+        "интервалы"
+      ],
+      "quizId": "sixths",
+      "thumb": "/thumbs/25.jpg"
+    },
+    {
+      "id": 26,
+      "moduleId": 6,
+      "youtubeId": "WY-DnMK-CLA",
+      "titleEn": "2/4 Time Signature on Piano — How to Count It (Beginner)",
+      "titleRu": "Размер 2/4",
+      "summaryRu": "Счёт на два, смена размеров.",
+      "durationSec": 1209,
+      "skills": [
+        "ритм"
+      ],
+      "quizId": "twofour",
+      "thumb": "/thumbs/26.jpg"
+    },
+    {
+      "id": 27,
+      "moduleId": 6,
+      "youtubeId": "UiaujFOVifY",
+      "titleEn": "What Is Staccato? How to Play Staccato on Piano (Beginner)",
+      "titleRu": "Стаккато",
+      "summaryRu": "Точка у ноты, отрыв от легато.",
+      "durationSec": 748,
+      "skills": [
+        "штрихи"
+      ],
+      "quizId": "staccato",
+      "thumb": "/thumbs/27.jpg"
+    },
+    {
+      "id": 28,
+      "moduleId": 6,
+      "youtubeId": "f7ku8d_OHVg",
+      "titleEn": "Piano Intervals: 7ths & Octaves — How to Read Them",
+      "titleRu": "Септимы и октавы",
+      "summaryRu": "Чтение широких интервалов.",
+      "durationSec": 925,
+      "skills": [
+        "интервалы"
+      ],
+      "quizId": "octaves",
+      "thumb": "/thumbs/28.jpg"
+    },
+    {
+      "id": 29,
+      "moduleId": 6,
+      "youtubeId": "UNPDDOx2qCE",
+      "titleEn": "The Flat Sign on Piano — What It Means & How to Play It",
+      "titleRu": "Бемоль ♭",
+      "summaryRu": "Сдвиг вниз на полтона.",
+      "durationSec": 421,
+      "skills": [
+        "альтерация"
+      ],
+      "quizId": "flat",
+      "thumb": "/thumbs/29.jpg"
+    },
+    {
+      "id": 30,
+      "moduleId": 6,
+      "youtubeId": "-T4FX2bprLQ",
+      "titleEn": "Half Steps & Whole Steps on Piano Explained (Adult Beginner)",
+      "titleRu": "Полутоны и тоны",
+      "summaryRu": "Строим гаммы из шагов.",
+      "durationSec": 268,
+      "skills": [
+        "теория"
+      ],
+      "quizId": "steps",
+      "thumb": "/thumbs/30.jpg"
+    },
+    {
+      "id": 31,
+      "moduleId": 7,
+      "youtubeId": "1PSshAwtp5g",
+      "titleEn": "C Major Scale on Piano: Fingering & the Thumb-Under Move",
+      "titleRu": "Гамма C major",
+      "summaryRu": "Аппликатура, подкладывание большого.",
+      "durationSec": 1375,
+      "skills": [
+        "гаммы",
+        "техника"
+      ],
+      "quizId": "scale-c",
+      "thumb": "/thumbs/31.jpg"
+    },
+    {
+      "id": 32,
+      "moduleId": 7,
+      "youtubeId": "tpF_km5GIR4",
+      "titleEn": "Primary Chords in C Major (I, IV, V7) + 12-Bar Blues",
+      "titleRu": "Главные аккорды C + блюз",
+      "summaryRu": "I–IV–V7 и 12-тактовый блюз.",
+      "durationSec": 706,
+      "skills": [
+        "гармония"
+      ],
+      "quizId": "blues-c",
+      "thumb": "/thumbs/32.jpg"
+    },
+    {
+      "id": 33,
+      "moduleId": 7,
+      "youtubeId": "TcX53ld-vvM",
+      "titleEn": "The Natural Sign on Piano + Blues & Extended Chords",
+      "titleRu": "Бекар и блюз",
+      "summaryRu": "Natural, расширенные аккорды.",
+      "durationSec": 1255,
+      "skills": [
+        "альтерация",
+        "блюз"
+      ],
+      "quizId": "natural",
+      "thumb": "/thumbs/33.jpg"
+    },
+    {
+      "id": 34,
+      "moduleId": 7,
+      "youtubeId": "-8C87fPMDT0",
+      "titleEn": "G Major Scale on Piano: Fingering for Both Hands & Key of G",
+      "titleRu": "Гамма G major",
+      "summaryRu": "F♯, тональность G.",
+      "durationSec": 756,
+      "skills": [
+        "гаммы"
+      ],
+      "quizId": "scale-g",
+      "thumb": "/thumbs/34.jpg"
+    },
+    {
+      "id": 35,
+      "moduleId": 7,
+      "youtubeId": "Ys0jSM-bu7A",
+      "titleEn": "Primary Chords in G Major (I, IV, V7) + Syncopation",
+      "titleRu": "Главные аккорды G + синкопа",
+      "summaryRu": "I–IV–V7 в G, синкопы.",
+      "durationSec": 1773,
+      "skills": [
+        "гармония",
+        "ритм"
+      ],
+      "quizId": "chords-g",
+      "thumb": "/thumbs/35.jpg"
+    },
+    {
+      "id": 36,
+      "moduleId": 7,
+      "youtubeId": "YaZLTvN2mYs",
+      "titleEn": "F Major Scale on Piano — Fingering, B-flat & Primary Chords",
+      "titleRu": "Гамма F major",
+      "summaryRu": "B♭, особая аппликатура, аккорды F.",
+      "durationSec": 1626,
+      "skills": [
+        "гаммы"
+      ],
+      "quizId": "scale-f",
+      "thumb": "/thumbs/36.jpg"
+    },
+    {
+      "id": 37,
+      "moduleId": 8,
+      "youtubeId": "MZ4UXRgO9Us",
+      "titleEn": "The Key of A Minor & the Harmonic Minor Scale on Piano",
+      "titleRu": "Ля минор",
+      "summaryRu": "Натуральный vs гармонический минор.",
+      "durationSec": 671,
+      "skills": [
+        "минор",
+        "гаммы"
+      ],
+      "quizId": "a-minor",
+      "thumb": "/thumbs/37.jpg"
+    },
+    {
+      "id": 38,
+      "moduleId": 8,
+      "youtubeId": "VkO_7D40rIQ",
+      "titleEn": "The Overlapping Pedal & Major vs Minor Triads on Piano",
+      "titleRu": "Overlapping pedal и мажор/минор",
+      "summaryRu": "Плавная педаль, Greensleeves.",
+      "durationSec": 589,
+      "skills": [
+        "педаль",
+        "минор"
+      ],
+      "quizId": "overlap",
+      "thumb": "/thumbs/38.jpg"
+    },
+    {
+      "id": 39,
+      "moduleId": 8,
+      "youtubeId": "ZkJdghpvCbI",
+      "titleEn": "Primary Chords in A Minor (i, iv, V7) — Adult Beginner Piano",
+      "titleRu": "Главные аккорды a-moll",
+      "summaryRu": "i–iv–V7 в ля миноре.",
+      "durationSec": 348,
+      "skills": [
+        "гармония",
+        "минор"
+      ],
+      "quizId": "chords-am",
+      "thumb": "/thumbs/39.jpg"
+    },
+    {
+      "id": 40,
+      "moduleId": 8,
+      "youtubeId": "Iphe5T-WuWU",
+      "titleEn": "The Key of D Minor + The Entertainer & Amazing Grace",
+      "titleRu": "Ре минор + Entertainer",
+      "summaryRu": "D minor, крупные пьесы.",
+      "durationSec": 1540,
+      "skills": [
+        "пьеса",
+        "минор"
+      ],
+      "quizId": "d-minor",
+      "thumb": "/thumbs/40.jpg"
+    },
+    {
+      "id": 41,
+      "moduleId": 8,
+      "youtubeId": "eM2teUxaxpU",
+      "titleEn": "What Are Arpeggiated (Rolled) Chords? + O Sole Mio",
+      "titleRu": "Арпеджио-аккорды + O Sole Mio",
+      "summaryRu": "Rolled chords и финальная пьеса.",
+      "durationSec": 820,
+      "skills": [
+        "пьеса",
+        "аккорды"
+      ],
+      "quizId": "arpeggio",
+      "thumb": "/thumbs/41.jpg"
+    }
+  ]
+}
